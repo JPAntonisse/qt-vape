@@ -14,10 +14,10 @@
 #include <QtWidgets/QMessageBox>
 #include <QtGui/QPainter>
 #include <QtGui/QScreen>
+#include <QtQuickWidgets/QQuickWidget>
 
 int main(int argc, char **argv)
 {
-    //! [0]
     QApplication app(argc, argv);
     Q3DSurface *graph = new Q3DSurface();
     InputHandler *inputhandler = new InputHandler(graph);
@@ -29,7 +29,6 @@ int main(int argc, char **argv)
                      simulation, &Simulation::drag);
 
     QWidget *container = QWidget::createWindowContainer(graph);
-    //! [0]
 
     if (!graph->hasContext()) {
         QMessageBox msgBox;
@@ -47,10 +46,18 @@ int main(int argc, char **argv)
     //! [1]
     QWidget *widget = new QWidget;
     QHBoxLayout *hLayout = new QHBoxLayout(widget);
-    QVBoxLayout *vLayout = new QVBoxLayout();
-    hLayout->addWidget(container, 1);
-    hLayout->addLayout(vLayout);
-    vLayout->setAlignment(Qt::AlignTop);
+//    QVBoxLayout *vLayout = new QVBoxLayout();
+
+    QQuickWidget *m_quickWidget = new QQuickWidget;
+    m_quickWidget->resize(300,300);
+    m_quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView );
+    m_quickWidget->setSource(QUrl("qrc:/qml/controlpanel.qml"));
+
+    hLayout->addWidget(m_quickWidget, 1);
+//    hLayout->addWidget(container, 1);
+//    hLayout->addLayout(vLayout);
+//    vLayout->setAlignment(Qt::AlignTop);
+//    vLayout->
     //! [1]
 
     widget->setWindowTitle(QStringLiteral("Surface example"));
@@ -151,15 +158,15 @@ int main(int argc, char **argv)
     colorHBox->addWidget(gradientGtoRPB);
     colorGroupBox->setLayout(colorHBox);
 
-    vLayout->addWidget(modelGroupBox);
-    vLayout->addWidget(selectionGroupBox);
-    vLayout->addWidget(new QLabel(QStringLiteral("Column range")));
-    vLayout->addWidget(axisMinSliderX);
-    vLayout->addWidget(axisMaxSliderX);
-    vLayout->addWidget(new QLabel(QStringLiteral("Row range")));
-    vLayout->addWidget(axisMinSliderZ);
-    vLayout->addWidget(axisMaxSliderZ);
-    vLayout->addWidget(colorGroupBox);
+//    vLayout->addWidget(modelGroupBox);
+//    vLayout->addWidget(selectionGroupBox);
+//    vLayout->addWidget(new QLabel(QStringLiteral("Column range")));
+//    vLayout->addWidget(axisMinSliderX);
+//    vLayout->addWidget(axisMaxSliderX);
+//    vLayout->addWidget(new QLabel(QStringLiteral("Row range")));
+//    vLayout->addWidget(axisMinSliderZ);
+//    vLayout->addWidget(axisMaxSliderZ);
+//    vLayout->addWidget(colorGroupBox);
 
     widget->show();
 

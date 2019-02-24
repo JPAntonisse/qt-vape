@@ -186,7 +186,8 @@ HEADERS += surfacegraph.h \
 QT += quick \
     datavisualization \
     gui \
-    widgets
+    widgets \
+    quickwidgets
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -199,7 +200,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     fftw-2.1.3/fftw/stamp-h1.in \
-    fftw-2.1.3/fftw/stamp-h2.in
+    fftw-2.1.3/fftw/stamp-h2.in \
+    qml/controlpanel.qml
 
 RESOURCES += scivis-surface.qrc
 

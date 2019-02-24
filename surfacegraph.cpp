@@ -97,7 +97,9 @@ void SurfaceGraph::enableSimulationModel(bool enable)
 {
     if (enable) {
         m_simSinSeries->setDrawMode(QSurface3DSeries::DrawSurfaceAndWireframe);
-        m_simSinSeries->setFlatShadingEnabled(true);
+        m_simSinSeries->setFlatShadingEnabled(false);
+        m_simSinSeries->setItemLabelVisible(false);
+        m_simSinSeries->setFlatShadingEnabled(false);
 
         m_graph->axisX()->setRange(-1.0f, 101.0f);
         m_graph->axisY()->setRange(0.0f, 0.2f);
