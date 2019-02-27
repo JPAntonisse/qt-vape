@@ -20,7 +20,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += fftw-2.1.3/fftw \
                 fftw-2.1.3/rfftw
 
-LIBS += -L library/FFTW.lib
+LIBS += -L $$library/FFTW.lib
 
 SOURCES += main.cpp \
     surfacegraph.cpp \
