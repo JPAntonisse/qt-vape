@@ -165,7 +165,9 @@ SOURCES += main.cpp \
     fftw-2.1.3/rfftw/rfftwf77.c \
     fftw-2.1.3/rfftw/rfftwnd.c \
     fftw-2.1.3/rfftw/rgeneric.c \
-    fftw-2.1.3/rfftw/rplanner.c
+    fftw-2.1.3/rfftw/rplanner.c \
+    datacontroller.cpp \
+    scattergraph.cpp
 
 
 
@@ -181,7 +183,9 @@ HEADERS += surfacegraph.h \
     fftw-2.1.3/rfftw/rfftw.h \
     inputhandler.h \
     simulation.h \
-    surfacegraph.h
+    surfacegraph.h \
+    datacontroller.h \
+    scattergraph.h
 
 QT += quick \
     datavisualization \

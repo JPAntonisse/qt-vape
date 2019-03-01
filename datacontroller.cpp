@@ -1,6 +1,29 @@
 #include "datacontroller.h"
 
-DataController::DataController()
+DataController::DataController(QWidget *container, SurfaceGraph *surfaceGraph, ScatterGraph *scatterGraph) : surfaceGraph(surfaceGraph), scatterGraph(scatterGraph), container(container)
 {
+    //viewType = 's';
 
+}
+
+
+void DataController::setView(char type){
+    // View Type, s = surfaceGraph, d = scatterDataModifier
+    viewType = type;
+}
+
+void DataController::setData(QSurfaceDataArray *dataArray){
+
+    //WORK TO DO
+    setDataSurfaceGraph(dataArray);
+    setDataScatterGraph(dataArray);
+
+}
+
+void DataController::setDataSurfaceGraph(QSurfaceDataArray *dataArray){
+    surfaceGraph->resetData(dataArray);
+}
+
+void DataController::setDataScatterGraph(QSurfaceDataArray *dataArray){
+    //scatterGraph->setProperty()
 }

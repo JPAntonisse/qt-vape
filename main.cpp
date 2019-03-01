@@ -1,5 +1,6 @@
 #include "surfacegraph.h"
 #include "simulation.h"
+#include "datacontroller.h"
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
@@ -19,19 +20,53 @@ int main(int argc, char **argv)
 {
     //! [0]
     QApplication app(argc, argv);
+
     Q3DSurface *graph = new Q3DSurface();
+    Q3DScatter *q3dScatter = new Q3DScatter();
+
+    QWidget *container = QWidget::createWindowContainer(q3dScatter);
+
     InputHandler *inputhandler = new InputHandler(graph);
 
     SurfaceGraph *surfaceGraph = new SurfaceGraph(graph, inputhandler);
-    Simulation *simulation = new Simulation(surfaceGraph);
+    ScatterGraph *scatterGraph = new ScatterGraph(q3dScatter);
+
+    DataController *dataController = new DataController(container, surfaceGraph, scatterGraph);
+
+
+
+    Simulation *simulation = new Simulation(dataController);
 
     QObject::connect(inputhandler, &InputHandler::dragged,
                      simulation, &Simulation::drag);
 
-    QWidget *container = QWidget::createWindowContainer(graph);
+    //CHANGED:
+    if (!graph->hasContext()) {
+            QMessageBox msgBox;
+            msgBox.setText("Couldn't initialize the OpenGL context.");
+            msgBox.exec();
+            return -1;
+        }
+
+    QSize screenSize = graph->screen()->size();
+    container->setMinimumSize(QSize(screenSize.width() / 2, screenSize.height() / 1.5));
+    container->setMaximumSize(screenSize);
+    container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    container->setFocusPolicy(Qt::StrongFocus);
+
+    QWidget *widget = new QWidget;
+    QHBoxLayout *hLayout = new QHBoxLayout(widget);
+    QVBoxLayout *vLayout = new QVBoxLayout();
+    hLayout->addWidget(container, 1);
+    hLayout->addLayout(vLayout);
+
+    widget->setWindowTitle(QStringLiteral("Item rotations example - Magnetic field of the sun"));
+
+
+
     //! [0]
 
-    if (!graph->hasContext()) {
+    /*if (!graph->hasContext()) {
         QMessageBox msgBox;
         msgBox.setText("Couldn't initialize the OpenGL context.");
         msgBox.exec();
@@ -53,7 +88,7 @@ int main(int argc, char **argv)
     vLayout->setAlignment(Qt::AlignTop);
     //! [1]
 
-    widget->setWindowTitle(QStringLiteral("Surface example"));
+    widget->setWindowTitle(QStringLiteral("Surface example"));*/
 
     QGroupBox *modelGroupBox = new QGroupBox(QStringLiteral("Model"));
 
@@ -100,6 +135,16 @@ int main(int argc, char **argv)
     selectionVBox->addWidget(modeSliceColumnRB);
     selectionGroupBox->setLayout(selectionVBox);
 
+    QGroupBox *GlyphsGroupBox = new QGroupBox(QStringLiteral("Glyphs"));
+
+    QRadioButton *GlyphsActive = new QRadioButton(widget);
+    GlyphsActive->setText(QStringLiteral("Glyphs"));
+    GlyphsActive->setChecked(false);
+
+    QVBoxLayout *selectionGlyphs = new QVBoxLayout;
+    selectionGlyphs->addWidget(GlyphsActive);
+    GlyphsGroupBox->setLayout(selectionGlyphs);
+
     QSlider *axisMinSliderX = new QSlider(Qt::Horizontal, widget);
     axisMinSliderX->setMinimum(0);
     axisMinSliderX->setTickInterval(1);
@@ -116,8 +161,6 @@ int main(int argc, char **argv)
     axisMaxSliderZ->setMinimum(1);
     axisMaxSliderZ->setTickInterval(1);
     axisMaxSliderZ->setEnabled(true);
-
-
 
     QGroupBox *colorGroupBox = new QGroupBox(QStringLiteral("Custom gradient"));
 
@@ -153,6 +196,7 @@ int main(int argc, char **argv)
 
     vLayout->addWidget(modelGroupBox);
     vLayout->addWidget(selectionGroupBox);
+    vLayout->addWidget(GlyphsGroupBox);
     vLayout->addWidget(new QLabel(QStringLiteral("Column range")));
     vLayout->addWidget(axisMinSliderX);
     vLayout->addWidget(axisMaxSliderX);
@@ -162,7 +206,6 @@ int main(int argc, char **argv)
     vLayout->addWidget(colorGroupBox);
 
     widget->show();
-
 
     QObject::connect(heightMapModelRB, &QRadioButton::toggled,
                      surfaceGraph, &SurfaceGraph::enableHeightMapModel);

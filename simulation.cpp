@@ -12,12 +12,11 @@ Simulation::~Simulation()
 {
 }
 
-Simulation::Simulation(SurfaceGraph *surfaceGraph) :
-    m_surface(surfaceGraph)
+Simulation::Simulation(DataController *datacontroller) :
+    dataController(datacontroller)
 {
 //    qDebug() << "Constructor Simulation...";
     init(m_gridSize);
-
     // create a timer
     timer = new QTimer(this);
 
@@ -60,7 +59,9 @@ void Simulation::visualize()
         }
         *dataArray << newRow;
     }
-    m_surface->resetData(dataArray);
+    //Data controller -> setData
+    dataController->setDataSurfaceGraph(dataArray);
+    //m_surface->resetData(dataArray);
 }
 
 void Simulation::setForces()

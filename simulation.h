@@ -3,6 +3,7 @@
 
 #include "rfftw.h"
 #include "surfacegraph.h"
+#include "datacontroller.h"
 #include <QTimer>
 
 class Simulation : public QObject
@@ -11,7 +12,7 @@ class Simulation : public QObject
     Q_OBJECT
 
     public:
-        explicit Simulation(SurfaceGraph *surfaceGraph);
+        explicit Simulation(DataController *dataController);
         ~Simulation();
 
         QTimer *timer;
@@ -29,7 +30,7 @@ class Simulation : public QObject
         fftw_real *fx, *fy;                             //(fx,fy)   = user-controlled simulation forces, steered with the mouse
         fftw_real *rho, *rho0;                          //smoke density at the current (rho) and previous (rho0) moment
         rfftwnd_plan plan_rc, plan_cr;                  //simulation domain discretization
-
+        DataController *dataController;
         SurfaceGraph *m_surface;
 
     private:
