@@ -87,7 +87,6 @@ void SurfaceGraph::enableSimulationModel(bool enable)
 
 void SurfaceGraph::drawWireFrame(bool wire_frame)
 {
-    qDebug() << " WIREFRRAME: " << wire_frame;
     if (wire_frame) {
         m_simSinSeries->setDrawMode(QSurface3DSeries::DrawSurfaceAndWireframe);
     } else {
