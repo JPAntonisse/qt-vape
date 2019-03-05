@@ -1,5 +1,12 @@
 <RCC>
-    <qresource prefix="/maps">
-        <file alias="mountain">mountain.png</file>
+    <qresource prefix="/">
+        <file>ControlPanel.qml</file>
+    </qresource>
+    <qresource prefix="/content">
+        <file>ColorPicker.qml</file>
+    </qresource>
+    <qresource prefix="/pages">
+        <file>Home.qml</file>
+        <file>Cones.qml</file>
     </qresource>
 </RCC>
