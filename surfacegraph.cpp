@@ -53,7 +53,7 @@ SurfaceGraph::SurfaceGraph(Q3DSurface *surface, InputHandler *inputhandler):
     m_heightMapHeight = heightMapImage.height();
 
 
-    surface->setActiveInputHandler(inputhandler);
+    //surface->setActiveInputHandler(inputhandler);
 }
 
 SurfaceGraph::~SurfaceGraph()

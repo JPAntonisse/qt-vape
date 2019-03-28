@@ -13,7 +13,8 @@ public:
     void setView(char type);
     void setData(QSurfaceDataArray *dataArray);
     void setDataSurfaceGraph(QSurfaceDataArray *dataArray);
-    void setDataScatterGraph(QSurfaceDataArray *dataArray);
+    void setDataScatterGraph(QScatterDataArray *dataArray);
+    ScatterGraph* getScatterGraph();
 private:
     SurfaceGraph *surfaceGraph;
     ScatterGraph *scatterGraph;

@@ -26,14 +26,12 @@ int main(int argc, char **argv)
 
     QWidget *container = QWidget::createWindowContainer(q3dScatter);
 
-    InputHandler *inputhandler = new InputHandler(graph);
+    InputHandler *inputhandler = new InputHandler(q3dScatter);
 
     SurfaceGraph *surfaceGraph = new SurfaceGraph(graph, inputhandler);
-    ScatterGraph *scatterGraph = new ScatterGraph(q3dScatter);
+    ScatterGraph *scatterGraph = new ScatterGraph(q3dScatter, inputhandler);
 
     DataController *dataController = new DataController(container, surfaceGraph, scatterGraph);
-
-
 
     Simulation *simulation = new Simulation(dataController);
 

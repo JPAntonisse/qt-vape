@@ -3,7 +3,11 @@
 
 #include <QtDataVisualization/q3dscatter.h>
 #include <QtDataVisualization/qscatterdataproxy.h>
+#include <QtDataVisualization/Q3DSurface>
+#include <QtDataVisualization/QSurfaceDataProxy>
+#include <QtDataVisualization/QSurface3DSeries>
 #include <QtCore/QTimer>
+#include "inputhandler.h"
 
 using namespace QtDataVisualization;
 
@@ -11,9 +15,10 @@ class ScatterGraph : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScatterGraph(Q3DScatter *scatter);
+    explicit ScatterGraph(Q3DScatter *scatter, InputHandler *inputhandler);
     ~ScatterGraph();
 
+    void resetData(QScatterDataArray *dataArray);
     void generateData();
 
 public Q_SLOTS:
@@ -22,7 +27,6 @@ public Q_SLOTS:
     void toggleRotation();
     void triggerRotation();
     void toggleSun();
-
 private:
     Q3DScatter *m_graph;
     QTimer m_rotationTimer;
@@ -31,6 +35,7 @@ private:
     QScatter3DSeries *m_magneticField;
     QCustom3DItem *m_sun;
     QScatterDataArray *m_magneticFieldArray;
+    QSurfaceDataProxy *m_surfaceDataProxy;
     float m_angleOffset;
     float m_angleStep;
 };

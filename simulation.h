@@ -35,7 +35,8 @@ class Simulation : public QObject
 
     private:
         void setForces();
-        void visualize();
+        void visualizeQSurface();
+        void visualizeQScatter();
 
         void init(int gridSize);
         void fft(int direction,void* vx);

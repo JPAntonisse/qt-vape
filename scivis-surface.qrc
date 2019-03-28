@@ -1,5 +1,7 @@
 <RCC>
-    <qresource prefix="/maps">
+    <qresource prefix="/">
         <file alias="mountain">mountain.png</file>
+        <file>narrowarrow.obj</file>
     </qresource>
+    <qresource prefix="/mesh"/>
 </RCC>
