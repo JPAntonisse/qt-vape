@@ -6,7 +6,11 @@
 #include <QObject>
 
 
-const int m_gridSize = 100;
+const int m_gridSize = 200;
+
+static const int DENSITY = 1;
+static const int VELOCITY = 2;
+static const int FORCE = 3;
 
 Simulation::~Simulation()
 {
@@ -31,19 +35,12 @@ Simulation::Simulation(SurfaceGraph *surfaceGraph) :
 //void Simulation::update(SurfaceGraph *m_surfacegraph)
 void Simulation::update()
 {
-//    if (!frozen)
-//    {
-
     setForces();
+
     solve(m_gridSize, vx, vy, vx0, vy0, visc, dt);
     diffuseMatter(m_gridSize, vx, vy, rho, rho0, dt);
+
     visualize();
-
-//        glutPostRedisplay();
-//    }
-
-    //TODO: Send update signal
-//    qDebug() << "Update done...";
 }
 
 void Simulation::visualize()
@@ -56,12 +53,53 @@ void Simulation::visualize()
         QSurfaceDataRow *newRow = new QSurfaceDataRow(m_gridSize);
         for (i = 0; i < m_gridSize; i++) {
             idx = (j * m_gridSize) + i;
-            (*newRow)[i].setPosition(QVector3D(j, rho[idx], i));
+            (*newRow)[i].setPosition(QVector3D(j, getDataPoint(idx), i));
         }
         *dataArray << newRow;
     }
     m_surface->resetData(dataArray);
 }
+
+fftw_real Simulation::getDataPoint(int idx)
+{
+    if(visualize_data == Simulation::DENSITY) {
+        return rho[idx];
+    } else if (visualize_data == Simulation::VELOCITY) {
+        return sqrt(pow(vx[idx], 2) + pow(vy[idx], 2));
+    } else if (visualize_data == Simulation::FORCE) {
+        return sqrt(pow(fx[idx], 2) + pow(fy[idx], 2));
+    }
+
+    return rho[idx];
+}
+
+void Simulation::setDataSet(QString dataSet)
+{
+    if(dataSet == (QString) "density") {
+        visualize_data = Simulation::DENSITY;
+    } else if (dataSet == (QString) "velocity") {
+        visualize_data = Simulation::VELOCITY;
+    } else if (dataSet == (QString) "force") {
+        visualize_data = Simulation::FORCE;
+    }
+}
+
+
+//void Simulation::getData()
+//{
+//    switch(this->m_dataset) {
+//       case constant-expression  :
+//          statement(s);
+//          break; //optional
+//       case constant-expression  :
+//          statement(s);
+//          break; //optional
+
+//       // you can have any number of case statements.
+//       default : //Optional
+//          statement(s);
+//    }
+//}
 
 void Simulation::setForces()
 {

@@ -15,13 +15,18 @@ class Simulation : public QObject
         ~Simulation();
 
         QTimer *timer;
+        int DENSITY;
+        int VELOCITY;
+        int FORCE;
 
         void drag(int X, int Y, float dx, float dy);
 
     public slots:
         void update();
+        void setDataSet(QString dataSet);
 
     private:
+        int visualize_data = Simulation::DENSITY;
         float dt = 0.4;                                 //simulation time step
         float visc = 0.001;                             //fluid viscosity
         fftw_real *vx, *vy;                             //(vx,vy)   = velocity field at the current moment
@@ -29,6 +34,9 @@ class Simulation : public QObject
         fftw_real *fx, *fy;                             //(fx,fy)   = user-controlled simulation forces, steered with the mouse
         fftw_real *rho, *rho0;                          //smoke density at the current (rho) and previous (rho0) moment
         rfftwnd_plan plan_rc, plan_cr;                  //simulation domain discretization
+
+        fftw_real getDataPoint(int idx);
+        QString m_dataset;
 
         SurfaceGraph *m_surface;
 
