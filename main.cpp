@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 
     QQuickStyle::setStyle("Material");
     QQuickWidget *m_quickWidget = new QQuickWidget;
-    m_quickWidget->resize(300, 800);
+    m_quickWidget->resize(400, 800);
     m_quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView );
 
     m_quickWidget->setSource(QUrl("qrc:/ControlPanel.qml"));
@@ -67,6 +67,9 @@ int main(int argc, char **argv)
 
     QObject::connect(item, SIGNAL(drawWireFrame(bool)),
                      surfaceGraph, SLOT(drawWireFrame(bool)));
+
+    QObject::connect(item, SIGNAL(setDataSet(QString)),
+                     simulation, SLOT(setDataSet(QString)));
 
     widget->show();
 

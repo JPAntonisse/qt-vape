@@ -11,6 +11,7 @@ Rectangle {
     signal setBlackToYellowGradient()
     signal setGreenToRedGradient()
     signal drawWireFrame(bool checked)
+    signal setDataSet(string dataSet)
 
     Material.theme: Material.Dark
     Material.accent: Material.Blue

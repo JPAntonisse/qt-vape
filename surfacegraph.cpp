@@ -48,10 +48,10 @@ void SurfaceGraph::enableSimulationModel(bool enable)
     m_simSinSeries->setItemLabelVisible(false);
     m_simSinSeries->setFlatShadingEnabled(false);
 
-    m_graph->axisX()->setRange(-1.0f, 101.0f);
+    m_graph->axisX()->setRange(-1.0f, 201.0f);
     m_graph->axisY()->setRange(0.0f, 0.2f);
     m_graph->setAspectRatio(20);
-    m_graph->axisZ()->setRange(-1.0f, 101.0f);
+    m_graph->axisZ()->setRange(-1.0f, 201.0f);
 
     m_graph->addSeries(m_simSinSeries);
 

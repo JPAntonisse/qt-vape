@@ -14,12 +14,62 @@ Page {
         padding: 15
 
 
+        Row {
+            id: row
+            width: column.width - 2 * column.padding
+            spacing: 15
+
+            RadioDelegate {
+                id: radioDelegate
+                text: qsTr("Density")
+                checked: true
+                onClicked: root.setDataSet("density")
+            }
+
+            RadioDelegate {
+                id: radioDelegate1
+                text: qsTr("Velocity")
+                onClicked: root.setDataSet("velocity")
+            }
+
+            RadioDelegate {
+                id: radioDelegate2
+                text: qsTr("Force")
+                onClicked: root.setDataSet("force")
+            }
+
+        }
+
+        Row {
+            id: row1
+            width: column.width - 2 * column.padding
+            spacing: 15
+            Text {
+                id: element1
+                height: 20
+                color: "#ffffff"
+                text: qsTr("Brush size")
+                anchors.topMargin: 15
+                anchors.top: parent.top
+                verticalAlignment: Text.AlignTop
+                font.pixelSize: 13
+            }
+
+            Slider {
+                id: slider1
+                stepSize: 0.1
+                value: 0
+            }
+        }
+
         SwitchDelegate {
             id: modeItemRB
             width: column.width - 2 * column.padding
-            text: qsTr("Draw Wire Frame")
+            text: qsTr("Enable wireframe")
             onToggled: root.drawWireFrame(checked)
+            font.pixelSize: 12
         }
+
 
         Rectangle {
             width: column.width - 2 * column.padding
@@ -64,20 +114,6 @@ Page {
         }
 
 
-        Text {
-            id: element
-            color: "#ffffff"
-            text: qsTr("Brush size")
-            font.pixelSize: 15
-        }
-
-        Slider {
-            id: slider
-            width: column.width - 2 * column.padding
-            stepSize: 0.1
-            value: 0.5
-        }
-
 
 
         Button {
@@ -85,9 +121,48 @@ Page {
         }
 
 
+
+
+
+
+
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
