@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>ControlPanel.qml</file>
+        <file>narrowarrow.obj</file>
     </qresource>
     <qresource prefix="/content">
         <file>ColorPicker.qml</file>

@@ -1,5 +1,6 @@
 #include "surfacegraph.h"
 #include "simulation.h"
+#include "datacontroller.h"
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
@@ -29,15 +30,27 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
 
     Q3DSurface *graph = new Q3DSurface();
-    InputHandler *inputhandler = new InputHandler(graph);
-    SurfaceGraph *surfaceGraph = new SurfaceGraph(graph, inputhandler);
-    Simulation *simulation = new Simulation(surfaceGraph);
+    Q3DScatter *q3dScatter = new Q3DScatter();
 
+    QWidget *container_scatter = QWidget::createWindowContainer(q3dScatter);
+    QWidget *container_surface = QWidget::createWindowContainer(graph);
+    container_scatter->hide();
 
-    QWidget *container = QWidget::createWindowContainer(graph);
+    InputHandler *inputhandler_scatter = new InputHandler(q3dScatter);
+    InputHandler *inputhandler_surface = new InputHandler(graph);
+
+    SurfaceGraph *surfaceGraph = new SurfaceGraph(graph, inputhandler_surface);
+    ScatterGraph *scatterGraph = new ScatterGraph(q3dScatter, inputhandler_scatter);
+
+    DataController *dataController = new DataController(surfaceGraph, scatterGraph);
+
+    Simulation *simulation = new Simulation(dataController);
+
     QSize screenSize = graph->screen()->size();
-    container->setMinimumSize(QSize(screenSize.width() / 2, screenSize.height() / 1.6));
-    container->setMaximumSize(screenSize);
+    container_scatter->setMinimumSize(QSize(screenSize.width() / 2, screenSize.height() / 1.6));
+    container_scatter->setMaximumSize(screenSize);
+    container_surface->setMinimumSize(QSize(screenSize.width() / 2, screenSize.height() / 1.6));
+    container_surface->setMaximumSize(screenSize);
 
     QWidget *widget = new QWidget;
     widget->setWindowTitle(QStringLiteral("Surface example"));
@@ -53,10 +66,17 @@ int main(int argc, char **argv)
     m_quickWidget->setSource(QUrl("qrc:/ControlPanel.qml"));
     QObject *item = m_quickWidget->rootObject();
 
-    hLayout->addWidget(container, 1);
+    hLayout->addWidget(container_scatter, 1);
+    hLayout->addWidget(container_surface, 1);
     hLayout->addWidget(m_quickWidget, 0);
 
-    QObject::connect(inputhandler, &InputHandler::dragged,
+
+
+
+    QObject::connect(inputhandler_scatter, &InputHandler::dragged,
+                     simulation, &Simulation::drag);
+
+    QObject::connect(inputhandler_surface, &InputHandler::dragged,
                      simulation, &Simulation::drag);
 
     QObject::connect(item, SIGNAL(setBlackToYellowGradient()),

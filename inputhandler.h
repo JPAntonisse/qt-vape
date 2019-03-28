@@ -17,7 +17,7 @@ class InputHandler : public Q3DInputHandler
     };
 
     public:
-        explicit InputHandler(Q3DSurface *graph = nullptr, QObject *parent = 0);
+        explicit InputHandler(QAbstract3DGraph *graph = nullptr, QObject *parent = 0);
         virtual ~InputHandler();
 
         virtual void mousePressEvent(QMouseEvent *event, const QPoint &mousePos);
@@ -35,7 +35,7 @@ class InputHandler : public Q3DInputHandler
         bool mousePressed;
         InputState state;
         float speedModifier;
-        Q3DSurface *m_graph;
+        QAbstract3DGraph *m_graph;
 };
 
 #endif

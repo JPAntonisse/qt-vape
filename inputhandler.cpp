@@ -1,6 +1,7 @@
 #include "inputhandler.h"
 #include <QtCore/qmath.h>
 #include <Q3DSurface>
+#include <Q3DScatter>
 
 using namespace QtDataVisualization;
 
@@ -14,7 +15,7 @@ InputHandler::~InputHandler()
 {
 }
 
-InputHandler::InputHandler(Q3DSurface *graph, QObject *parent) :
+InputHandler::InputHandler(QAbstract3DGraph *graph, QObject *parent) :
     Q3DInputHandler(parent),
     mousePressed(false),
     speedModifier(15.0f),
@@ -70,8 +71,16 @@ void InputHandler::handleDragging()
 {
     float xDistance,yDistance = 0.0f;
 
-
-    QPoint selectedPoint = m_graph->selectedSeries()->selectedPoint();
+    int id;
+    QPoint selectedPoint;
+    QScatterDataItem item;
+    if ( dynamic_cast<Q3DSurface*>( m_graph ) ){
+        selectedPoint = dynamic_cast<Q3DSurface*>( m_graph )->selectedSeries()->selectedPoint();
+    }
+    if( dynamic_cast<Q3DScatter*>( m_graph ) ){
+        id = dynamic_cast<Q3DScatter*>( m_graph )->selectedSeries()->selectedItem();
+        item = *dynamic_cast<Q3DScatter*>( m_graph )->selectedSeries()->dataProxy()->itemAt(id);
+    }
 
     // Get scene orientation from active camera
     float xRotation = scene()->activeCamera()->xRotation();
@@ -93,7 +102,10 @@ void InputHandler::handleDragging()
             xDistance = (xMove * xMulX - yMove * xMulY) / m_speedmodifier;
             yDistance = (xMove * xMulY + yMove * xMulX) / m_speedmodifier;
 
-            emit(dragged(selectedPoint.x(), selectedPoint.y(),xDistance, yDistance));
+            if(selectedPoint.x() == NULL){
+                emit(dragged(item.x(), item.z(),xDistance, yDistance));
+            }
+            else emit(dragged(selectedPoint.x(), selectedPoint.y(),xDistance, yDistance));
             break;
         }
         default:

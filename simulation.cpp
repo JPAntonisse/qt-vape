@@ -4,9 +4,13 @@
 #include <QtCore/qmath.h>
 #include <QDebug>
 #include <QObject>
+#include <cmath>
 
 
 const int m_gridSize = 200;
+const double m_gridSize_double = 100.0;
+const bool type = false;
+const double pi = 3.14159265358979323846;
 
 static const int DENSITY = 1;
 static const int VELOCITY = 2;
@@ -16,14 +20,15 @@ Simulation::~Simulation()
 {
 }
 
-Simulation::Simulation(SurfaceGraph *surfaceGraph) :
-    m_surface(surfaceGraph)
+Simulation::Simulation(DataController *datacontroller) :
+    dataController(datacontroller)
 {
 //    qDebug() << "Constructor Simulation...";
     init(m_gridSize);
-
     // create a timer
     timer = new QTimer(this);
+
+    //dataController->
 
     // setup signal and slot
     connect(timer, SIGNAL(timeout()),
@@ -40,10 +45,13 @@ void Simulation::update()
     solve(m_gridSize, vx, vy, vx0, vy0, visc, dt);
     diffuseMatter(m_gridSize, vx, vy, rho, rho0, dt);
 
-    visualize();
+//    if(type) visualizeQSurface();
+//    else visualizeQScatter();
+
+    visualizeQSurface();
 }
 
-void Simulation::visualize()
+void Simulation::visualizeQSurface()
 {
     int i, j, idx;
     QSurfaceDataArray *dataArray = new QSurfaceDataArray;
@@ -57,7 +65,37 @@ void Simulation::visualize()
         }
         *dataArray << newRow;
     }
-    m_surface->resetData(dataArray);
+    //Data controller -> setData
+    dataController->setDataSurfaceGraph(dataArray);
+    //m_surface->resetData(dataArray);
+}
+
+void Simulation::visualizeQScatter(){
+    QScatterDataArray *m_magneticFieldArray = new QScatterDataArray;
+
+    int arraySize = m_gridSize * m_gridSize;
+    if (arraySize != m_magneticFieldArray->size())
+        m_magneticFieldArray->resize(arraySize);
+
+    QScatterDataItem *ptrToDataArray = &m_magneticFieldArray->first();
+    for (int j = 0; j < m_gridSize; j++) {
+
+        for (int i = 0; i < m_gridSize; i++) {
+            //qDebug() << i << " - " << j << " : " << (0.16 * i - 8) << " " << (0.16 * j - 8);
+            ptrToDataArray->setPosition(QVector3D(((16 / m_gridSize_double) * i - 8), 0, ((16 / m_gridSize_double) * j - 8)));
+            //qDebug() << "ATAN: " << atan2(vy[(i * m_gridSize) + j], vx[(i * m_gridSize) + j]);
+            //qDebug() << "X: " << vx[(i * m_gridSize) + j] << "Y: " << vy[(i * m_gridSize) + j];
+
+            QQuaternion rotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 1.0f, (atan2(vy[(i * m_gridSize) + j], vx[(i * m_gridSize) + j])*(180.0/pi)));
+
+            ptrToDataArray->setRotation(rotation);
+
+            ptrToDataArray++;
+        }
+    }
+
+    //Data controller -> setData
+    dataController->getScatterGraph()->resetData(m_magneticFieldArray);
 }
 
 fftw_real Simulation::getDataPoint(int idx)
@@ -135,6 +173,8 @@ void Simulation::init(int gridSize)
 
     for (i = 0; i < gridSize * gridSize; i++) //Initialize data structures to 0
     { vx[i] = vy[i] = vx0[i] = vy0[i] = fx[i] = fy[i] = rho[i] = rho0[i] = 0.0f; }
+
+
 }
 
 void Simulation::solve(int n, fftw_real* vx, fftw_real* vy, fftw_real* vx0, fftw_real* vy0, fftw_real visc, fftw_real dt)
