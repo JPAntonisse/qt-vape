@@ -169,7 +169,8 @@ SOURCES += main.cpp \
     fftw-2.1.3/rfftw/rgeneric.c \
     fftw-2.1.3/rfftw/rplanner.c \
     datacontroller.cpp \
-    scattergraph.cpp
+    scattergraph.cpp \
+    container_manager.cpp
 
 
 
@@ -187,7 +188,8 @@ HEADERS += surfacegraph.h \
     simulation.h \
     surfacegraph.h \
     datacontroller.h \
-    scattergraph.h
+    scattergraph.h \
+    container_manager.h
 
 
 DISTFILES += \

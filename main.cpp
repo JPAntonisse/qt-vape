@@ -1,6 +1,7 @@
 #include "surfacegraph.h"
 #include "simulation.h"
 #include "datacontroller.h"
+#include "container_manager.h"
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
@@ -70,8 +71,7 @@ int main(int argc, char **argv)
     hLayout->addWidget(container_surface, 1);
     hLayout->addWidget(m_quickWidget, 0);
 
-
-
+    ContainerManager *container_m = new ContainerManager(container_surface, container_scatter);
 
     QObject::connect(inputhandler_scatter, &InputHandler::dragged,
                      simulation, &Simulation::drag);
@@ -87,6 +87,9 @@ int main(int argc, char **argv)
 
     QObject::connect(item, SIGNAL(drawWireFrame(bool)),
                      surfaceGraph, SLOT(drawWireFrame(bool)));
+
+    QObject::connect(item, SIGNAL(showSurface(bool)),
+                     container_m, SLOT(showSurface(bool)));
 
     QObject::connect(item, SIGNAL(setDataSet(QString)),
                      simulation, SLOT(setDataSet(QString)));

@@ -8,13 +8,9 @@
 
 
 const int m_gridSize = 200;
-const double m_gridSize_double = 100.0;
+const double m_gridSize_double = 200.0;
 const bool type = false;
 const double pi = 3.14159265358979323846;
-
-static const int DENSITY = 1;
-static const int VELOCITY = 2;
-static const int FORCE = 3;
 
 Simulation::~Simulation()
 {
@@ -49,6 +45,7 @@ void Simulation::update()
 //    else visualizeQScatter();
 
     visualizeQSurface();
+    visualizeQScatter();
 }
 
 void Simulation::visualizeQSurface()
@@ -77,16 +74,18 @@ void Simulation::visualizeQScatter(){
     if (arraySize != m_magneticFieldArray->size())
         m_magneticFieldArray->resize(arraySize);
 
+    int i, j, idx;
     QScatterDataItem *ptrToDataArray = &m_magneticFieldArray->first();
-    for (int j = 0; j < m_gridSize; j++) {
+    for (j = 0; j < m_gridSize; j++) {
 
-        for (int i = 0; i < m_gridSize; i++) {
+        for (i = 0; i < m_gridSize; i++) {
+            idx = (j * m_gridSize) + i;
             //qDebug() << i << " - " << j << " : " << (0.16 * i - 8) << " " << (0.16 * j - 8);
             ptrToDataArray->setPosition(QVector3D(((16 / m_gridSize_double) * i - 8), 0, ((16 / m_gridSize_double) * j - 8)));
             //qDebug() << "ATAN: " << atan2(vy[(i * m_gridSize) + j], vx[(i * m_gridSize) + j]);
             //qDebug() << "X: " << vx[(i * m_gridSize) + j] << "Y: " << vy[(i * m_gridSize) + j];
 
-            QQuaternion rotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 1.0f, (atan2(vy[(i * m_gridSize) + j], vx[(i * m_gridSize) + j])*(180.0/pi)));
+            QQuaternion rotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 1.0f, (atan2(vy[idx], vx[idx])*(180.0/pi)));
 
             ptrToDataArray->setRotation(rotation);
 
@@ -113,6 +112,7 @@ fftw_real Simulation::getDataPoint(int idx)
 
 void Simulation::setDataSet(QString dataSet)
 {
+    qDebug() << "set data set : " << dataSet;
     if(dataSet == (QString) "density") {
         visualize_data = Simulation::DENSITY;
     } else if (dataSet == (QString) "velocity") {

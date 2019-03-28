@@ -8,6 +8,6 @@
     </qresource>
     <qresource prefix="/pages">
         <file>Home.qml</file>
-        <file>Cones.qml</file>
+        <file>Glyphs.qml</file>
     </qresource>
 </RCC>

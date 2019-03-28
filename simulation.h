@@ -16,9 +16,9 @@ class Simulation : public QObject
         ~Simulation();
 
         QTimer *timer;
-        int DENSITY;
-        int VELOCITY;
-        int FORCE;
+        int DENSITY = 1;
+        int VELOCITY = 2;
+        int FORCE = 3;
 
         void drag(int X, int Y, float dx, float dy);
 

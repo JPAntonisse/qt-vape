@@ -12,6 +12,7 @@ Rectangle {
     signal setGreenToRedGradient()
     signal drawWireFrame(bool checked)
     signal setDataSet(string dataSet)
+    signal showSurface(bool show)
 
     Material.theme: Material.Dark
     Material.accent: Material.Blue
@@ -26,9 +27,11 @@ Rectangle {
         anchors.topMargin: 0
         TabButton {
             text: qsTr("Home")
+            onClicked: root.showSurface(true)
         }
         TabButton {
-            text: qsTr("Cones")
+            text: qsTr("Glyphs")
+            onClicked: root.showSurface(false)
         }
     }
 
@@ -43,7 +46,7 @@ Rectangle {
            source:"pages/Home.qml";
         }
         Loader {
-           source:"pages/Cones.qml";
+           source:"pages/Glyphs.qml";
         }
     }
 

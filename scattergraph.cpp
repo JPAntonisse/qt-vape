@@ -24,8 +24,8 @@ static const float animationFrames = 30.0f;
 
 ScatterGraph::ScatterGraph(Q3DScatter *scatter, InputHandler *inputhandler)
     : m_graph(scatter),
-      m_fieldLines(100),
-      m_arrowsPerLine(100),
+      m_fieldLines(200),
+      m_arrowsPerLine(200),
       m_magneticField(new QScatter3DSeries),
       m_sun(new QCustom3DItem),
       m_magneticFieldArray(0),
