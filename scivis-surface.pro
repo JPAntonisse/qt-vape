@@ -1,9 +1,11 @@
 QT += quick \
     datavisualization \
     gui \
-    widgets
-CONFIG += c++11
+    widgets \
+    quickwidgets \
+    quickcontrols2
 
+CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -187,19 +189,6 @@ HEADERS += surfacegraph.h \
     datacontroller.h \
     scattergraph.h
 
-QT += quick \
-    datavisualization \
-    gui \
-    widgets
-
-# Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
-
 
 DISTFILES += \
     fftw-2.1.3/fftw/stamp-h1.in \
@@ -208,4 +197,4 @@ DISTFILES += \
 RESOURCES += scivis-surface.qrc
 
 OTHER_FILES += doc/src/* \
-               doc/images/*
+               doc/images/*\

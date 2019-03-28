@@ -9,7 +9,7 @@
 class DataController
 {
 public:
-    DataController(QWidget *container, SurfaceGraph *surfaceGraph, ScatterGraph *scatterDataModifier);
+    DataController(SurfaceGraph *surfaceGraph, ScatterGraph *scatterDataModifier);
     void setView(char type);
     void setData(QSurfaceDataArray *dataArray);
     void setDataSurfaceGraph(QSurfaceDataArray *dataArray);

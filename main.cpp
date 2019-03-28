@@ -15,233 +15,84 @@
 #include <QtWidgets/QMessageBox>
 #include <QtGui/QPainter>
 #include <QtGui/QScreen>
+#include <QtQuickWidgets/QQuickWidget>
+#include <QQmlContext>
+#include <QQmlApplicationEngine>
+
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQuickStyle>
+#include <QtQuick>
+
 
 int main(int argc, char **argv)
 {
-    //! [0]
     QApplication app(argc, argv);
 
     Q3DSurface *graph = new Q3DSurface();
     Q3DScatter *q3dScatter = new Q3DScatter();
 
-    QWidget *container = QWidget::createWindowContainer(q3dScatter);
+    QWidget *container_scatter = QWidget::createWindowContainer(q3dScatter);
+    QWidget *container_surface = QWidget::createWindowContainer(graph);
+    container_scatter->hide();
 
-    InputHandler *inputhandler = new InputHandler(q3dScatter);
+    InputHandler *inputhandler_scatter = new InputHandler(q3dScatter);
+    InputHandler *inputhandler_surface = new InputHandler(graph);
 
-    SurfaceGraph *surfaceGraph = new SurfaceGraph(graph, inputhandler);
-    ScatterGraph *scatterGraph = new ScatterGraph(q3dScatter, inputhandler);
+    SurfaceGraph *surfaceGraph = new SurfaceGraph(graph, inputhandler_surface);
+    ScatterGraph *scatterGraph = new ScatterGraph(q3dScatter, inputhandler_scatter);
 
-    DataController *dataController = new DataController(container, surfaceGraph, scatterGraph);
+    DataController *dataController = new DataController(surfaceGraph, scatterGraph);
 
     Simulation *simulation = new Simulation(dataController);
 
-    QObject::connect(inputhandler, &InputHandler::dragged,
+    QSize screenSize = graph->screen()->size();
+    container_scatter->setMinimumSize(QSize(screenSize.width() / 2, screenSize.height() / 1.6));
+    container_scatter->setMaximumSize(screenSize);
+    container_surface->setMinimumSize(QSize(screenSize.width() / 2, screenSize.height() / 1.6));
+    container_surface->setMaximumSize(screenSize);
+
+    QWidget *widget = new QWidget;
+    widget->setWindowTitle(QStringLiteral("Surface example"));
+    QHBoxLayout *hLayout = new QHBoxLayout(widget);
+    hLayout->setSpacing(0);
+    hLayout->setMargin(0);
+
+    QQuickStyle::setStyle("Material");
+    QQuickWidget *m_quickWidget = new QQuickWidget;
+    m_quickWidget->resize(400, 800);
+    m_quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView );
+
+    m_quickWidget->setSource(QUrl("qrc:/ControlPanel.qml"));
+    QObject *item = m_quickWidget->rootObject();
+
+    hLayout->addWidget(container_scatter, 1);
+    hLayout->addWidget(container_surface, 1);
+    hLayout->addWidget(m_quickWidget, 0);
+
+
+
+
+    QObject::connect(inputhandler_scatter, &InputHandler::dragged,
                      simulation, &Simulation::drag);
 
-    //CHANGED:
-    if (!graph->hasContext()) {
-            QMessageBox msgBox;
-            msgBox.setText("Couldn't initialize the OpenGL context.");
-            msgBox.exec();
-            return -1;
-        }
+    QObject::connect(inputhandler_surface, &InputHandler::dragged,
+                     simulation, &Simulation::drag);
 
-    QSize screenSize = graph->screen()->size();
-    container->setMinimumSize(QSize(screenSize.width() / 2, screenSize.height() / 1.5));
-    container->setMaximumSize(screenSize);
-    container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    container->setFocusPolicy(Qt::StrongFocus);
+    QObject::connect(item, SIGNAL(setBlackToYellowGradient()),
+                     surfaceGraph, SLOT(setBlackToYellowGradient()));
 
-    QWidget *widget = new QWidget;
-    QHBoxLayout *hLayout = new QHBoxLayout(widget);
-    QVBoxLayout *vLayout = new QVBoxLayout();
-    hLayout->addWidget(container, 1);
-    hLayout->addLayout(vLayout);
+    QObject::connect(item, SIGNAL(setGreenToRedGradient()),
+                     surfaceGraph, SLOT(setGreenToRedGradient()));
 
-    widget->setWindowTitle(QStringLiteral("Item rotations example - Magnetic field of the sun"));
+    QObject::connect(item, SIGNAL(drawWireFrame(bool)),
+                     surfaceGraph, SLOT(drawWireFrame(bool)));
 
-
-
-    //! [0]
-
-    /*if (!graph->hasContext()) {
-        QMessageBox msgBox;
-        msgBox.setText("Couldn't initialize the OpenGL context.");
-        msgBox.exec();
-        return -1;
-    }
-
-    QSize screenSize = graph->screen()->size();
-    container->setMinimumSize(QSize(screenSize.width() / 2, screenSize.height() / 1.6));
-    container->setMaximumSize(screenSize);
-    container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    container->setFocusPolicy(Qt::StrongFocus);
-
-    //! [1]
-    QWidget *widget = new QWidget;
-    QHBoxLayout *hLayout = new QHBoxLayout(widget);
-    QVBoxLayout *vLayout = new QVBoxLayout();
-    hLayout->addWidget(container, 1);
-    hLayout->addLayout(vLayout);
-    vLayout->setAlignment(Qt::AlignTop);
-    //! [1]
-
-    widget->setWindowTitle(QStringLiteral("Surface example"));*/
-
-    QGroupBox *modelGroupBox = new QGroupBox(QStringLiteral("Model"));
-
-    QRadioButton *simModelRB = new QRadioButton(widget);
-    simModelRB->setText(QStringLiteral("Simulation"));
-    simModelRB->setChecked(false);
-
-    QRadioButton *sqrtSinModelRB = new QRadioButton(widget);
-    sqrtSinModelRB->setText(QStringLiteral("Sqrt && Sin"));
-    sqrtSinModelRB->setChecked(false);
-
-    QRadioButton *heightMapModelRB = new QRadioButton(widget);
-    heightMapModelRB->setText(QStringLiteral("Height Map"));
-    heightMapModelRB->setChecked(false);
-
-    QVBoxLayout *modelVBox = new QVBoxLayout;
-    modelVBox->addWidget(simModelRB);
-    modelVBox->addWidget(sqrtSinModelRB);
-    modelVBox->addWidget(heightMapModelRB);
-    modelGroupBox->setLayout(modelVBox);
-
-    QGroupBox *selectionGroupBox = new QGroupBox(QStringLiteral("Selection Mode"));
-
-    QRadioButton *modeNoneRB = new QRadioButton(widget);
-    modeNoneRB->setText(QStringLiteral("No selection"));
-    modeNoneRB->setChecked(false);
-
-    QRadioButton *modeItemRB = new QRadioButton(widget);
-    modeItemRB->setText(QStringLiteral("Item"));
-    modeItemRB->setChecked(false);
-
-    QRadioButton *modeSliceRowRB = new QRadioButton(widget);
-    modeSliceRowRB->setText(QStringLiteral("Row Slice"));
-    modeSliceRowRB->setChecked(false);
-
-    QRadioButton *modeSliceColumnRB = new QRadioButton(widget);
-    modeSliceColumnRB->setText(QStringLiteral("Column Slice"));
-    modeSliceColumnRB->setChecked(false);
-
-    QVBoxLayout *selectionVBox = new QVBoxLayout;
-    selectionVBox->addWidget(modeNoneRB);
-    selectionVBox->addWidget(modeItemRB);
-    selectionVBox->addWidget(modeSliceRowRB);
-    selectionVBox->addWidget(modeSliceColumnRB);
-    selectionGroupBox->setLayout(selectionVBox);
-
-    QGroupBox *GlyphsGroupBox = new QGroupBox(QStringLiteral("Glyphs"));
-
-    QRadioButton *GlyphsActive = new QRadioButton(widget);
-    GlyphsActive->setText(QStringLiteral("Glyphs"));
-    GlyphsActive->setChecked(false);
-
-    QVBoxLayout *selectionGlyphs = new QVBoxLayout;
-    selectionGlyphs->addWidget(GlyphsActive);
-    GlyphsGroupBox->setLayout(selectionGlyphs);
-
-    QSlider *axisMinSliderX = new QSlider(Qt::Horizontal, widget);
-    axisMinSliderX->setMinimum(0);
-    axisMinSliderX->setTickInterval(1);
-    axisMinSliderX->setEnabled(true);
-    QSlider *axisMaxSliderX = new QSlider(Qt::Horizontal, widget);
-    axisMaxSliderX->setMinimum(1);
-    axisMaxSliderX->setTickInterval(1);
-    axisMaxSliderX->setEnabled(true);
-    QSlider *axisMinSliderZ = new QSlider(Qt::Horizontal, widget);
-    axisMinSliderZ->setMinimum(0);
-    axisMinSliderZ->setTickInterval(1);
-    axisMinSliderZ->setEnabled(true);
-    QSlider *axisMaxSliderZ = new QSlider(Qt::Horizontal, widget);
-    axisMaxSliderZ->setMinimum(1);
-    axisMaxSliderZ->setTickInterval(1);
-    axisMaxSliderZ->setEnabled(true);
-
-    QGroupBox *colorGroupBox = new QGroupBox(QStringLiteral("Custom gradient"));
-
-    QLinearGradient grBtoY(0, 0, 1, 500);
-    grBtoY.setColorAt(0.0, Qt::black);
-    grBtoY.setColorAt(0.02, Qt::blue);
-    grBtoY.setColorAt(0.04, Qt::red);
-    grBtoY.setColorAt(0.08, Qt::yellow);
-    QPixmap pm(24, 100);
-    QPainter pmp(&pm);
-    pmp.setBrush(QBrush(grBtoY));
-    pmp.setPen(Qt::NoPen);
-    pmp.drawRect(0, 0, 24, 100);
-    QPushButton *gradientBtoYPB = new QPushButton(widget);
-    gradientBtoYPB->setIcon(QIcon(pm));
-    gradientBtoYPB->setIconSize(QSize(24, 100));
-
-    QLinearGradient grGtoR(0, 0, 1, 100);
-    grGtoR.setColorAt(1.0, Qt::darkGreen);
-    grGtoR.setColorAt(0.5, Qt::yellow);
-    grGtoR.setColorAt(0.2, Qt::red);
-    grGtoR.setColorAt(0.0, Qt::darkRed);
-    pmp.setBrush(QBrush(grGtoR));
-    pmp.drawRect(0, 0, 24, 100);
-    QPushButton *gradientGtoRPB = new QPushButton(widget);
-    gradientGtoRPB->setIcon(QIcon(pm));
-    gradientGtoRPB->setIconSize(QSize(24, 100));
-
-    QHBoxLayout *colorHBox = new QHBoxLayout;
-    colorHBox->addWidget(gradientBtoYPB);
-    colorHBox->addWidget(gradientGtoRPB);
-    colorGroupBox->setLayout(colorHBox);
-
-    vLayout->addWidget(modelGroupBox);
-    vLayout->addWidget(selectionGroupBox);
-    vLayout->addWidget(GlyphsGroupBox);
-    vLayout->addWidget(new QLabel(QStringLiteral("Column range")));
-    vLayout->addWidget(axisMinSliderX);
-    vLayout->addWidget(axisMaxSliderX);
-    vLayout->addWidget(new QLabel(QStringLiteral("Row range")));
-    vLayout->addWidget(axisMinSliderZ);
-    vLayout->addWidget(axisMaxSliderZ);
-    vLayout->addWidget(colorGroupBox);
+    QObject::connect(item, SIGNAL(setDataSet(QString)),
+                     simulation, SLOT(setDataSet(QString)));
 
     widget->show();
 
-    QObject::connect(heightMapModelRB, &QRadioButton::toggled,
-                     surfaceGraph, &SurfaceGraph::enableHeightMapModel);
-    QObject::connect(sqrtSinModelRB, &QRadioButton::toggled,
-                     surfaceGraph, &SurfaceGraph::enableSqrtSinModel);
-    QObject::connect(simModelRB, &QRadioButton::toggled,
-                     surfaceGraph, &SurfaceGraph::enableSimulationModel);
-    QObject::connect(modeNoneRB, &QRadioButton::toggled,
-                     surfaceGraph, &SurfaceGraph::toggleModeNone);
-    QObject::connect(modeItemRB,  &QRadioButton::toggled,
-                     surfaceGraph, &SurfaceGraph::toggleModeItem);
-    QObject::connect(modeSliceRowRB,  &QRadioButton::toggled,
-                     surfaceGraph, &SurfaceGraph::toggleModeSliceRow);
-    QObject::connect(modeSliceColumnRB,  &QRadioButton::toggled,
-                     surfaceGraph, &SurfaceGraph::toggleModeSliceColumn);
-    QObject::connect(axisMinSliderX, &QSlider::valueChanged,
-                     surfaceGraph, &SurfaceGraph::adjustXMin);
-    QObject::connect(axisMaxSliderX, &QSlider::valueChanged,
-                     surfaceGraph, &SurfaceGraph::adjustXMax);
-    QObject::connect(axisMinSliderZ, &QSlider::valueChanged,
-                     surfaceGraph, &SurfaceGraph::adjustZMin);
-    QObject::connect(axisMaxSliderZ, &QSlider::valueChanged,
-                     surfaceGraph, &SurfaceGraph::adjustZMax);
-//    QObject::connect(themeList, SIGNAL(currentIndexChanged(int)),
-//                     surfaceGraph, SLOT(changeTheme(int)));
-    QObject::connect(gradientBtoYPB, &QPushButton::pressed,
-                     surfaceGraph, &SurfaceGraph::setBlackToYellowGradient);
-    QObject::connect(gradientGtoRPB, &QPushButton::pressed,
-                     surfaceGraph, &SurfaceGraph::setGreenToRedGradient);
-
-    surfaceGraph->setAxisMinSliderX(axisMinSliderX);
-    surfaceGraph->setAxisMaxSliderX(axisMaxSliderX);
-    surfaceGraph->setAxisMinSliderZ(axisMinSliderZ);
-    surfaceGraph->setAxisMaxSliderZ(axisMaxSliderZ);
-
-//    heightMapModelRB->setChecked(true);
-    simModelRB->setChecked(true);
-    modeItemRB->setChecked(true);
 
     return app.exec();
 }

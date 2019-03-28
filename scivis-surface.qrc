@@ -1,7 +1,13 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="mountain">mountain.png</file>
+        <file>ControlPanel.qml</file>
         <file>narrowarrow.obj</file>
     </qresource>
-    <qresource prefix="/mesh"/>
+    <qresource prefix="/content">
+        <file>ColorPicker.qml</file>
+    </qresource>
+    <qresource prefix="/pages">
+        <file>Home.qml</file>
+        <file>Cones.qml</file>
+    </qresource>
 </RCC>

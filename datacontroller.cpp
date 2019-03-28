@@ -1,6 +1,6 @@
 #include "datacontroller.h"
 
-DataController::DataController(QWidget *container, SurfaceGraph *surfaceGraph, ScatterGraph *scatterGraph) : surfaceGraph(surfaceGraph), scatterGraph(scatterGraph), container(container)
+DataController::DataController(SurfaceGraph *surfaceGraph, ScatterGraph *scatterGraph) : surfaceGraph(surfaceGraph), scatterGraph(scatterGraph), container(container)
 {
     //viewType = 's';
 

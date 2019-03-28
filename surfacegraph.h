@@ -20,21 +20,16 @@ class SurfaceGraph : public QObject
 
         void resetData(QSurfaceDataArray *dataArray);
 
-        void enableHeightMapModel(bool enable);
-        void enableSqrtSinModel(bool enable);
         void enableSimulationModel(bool enable);
 
         //! [0]
         void toggleModeNone() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionNone); }
-        void toggleModeItem() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItem); }
         void toggleModeSliceRow() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItemAndRow
                                                               | QAbstract3DGraph::SelectionSlice); }
         void toggleModeSliceColumn() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItemAndColumn
                                                                  | QAbstract3DGraph::SelectionSlice); }
         //! [0]
 
-        void setBlackToYellowGradient();
-        void setGreenToRedGradient();
 
         void setAxisMinSliderX(QSlider *slider) { m_axisMinSliderX = slider; }
         void setAxisMaxSliderX(QSlider *slider) { m_axisMaxSliderX = slider; }
@@ -47,6 +42,10 @@ class SurfaceGraph : public QObject
         void adjustZMax(int max);
 
     public Q_SLOTS:
+        void drawWireFrame(bool);
+        void setBlackToYellowGradient();
+        void setGreenToRedGradient();
+        void toggleModeItem() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItem); }
 
     private:
         Q3DSurface *m_graph;
