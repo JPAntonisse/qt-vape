@@ -2,14 +2,14 @@
 
 #include "rfftw.h"
 #include <QtCore/qmath.h>
+#include <QtDataVisualization/QCustom3DItem>
 #include <QDebug>
 #include <QObject>
 #include <cmath>
 
 
-const int m_gridSize = 200;
-const double m_gridSize_double = 200.0;
-const bool type = false;
+const int m_gridSize = 100;
+const double m_gridSize_double = 100.0;
 const double pi = 3.14159265358979323846;
 
 Simulation::~Simulation()
@@ -44,8 +44,17 @@ void Simulation::update()
 //    if(type) visualizeQSurface();
 //    else visualizeQScatter();
 
-    visualizeQSurface();
-    visualizeQScatter();
+    if (visualizationType){
+        visualizeQSurface();
+    }else{
+        visualizeQScatter();
+        visualizeQSurface();
+    }
+}
+
+
+void Simulation::setVisualizationType(bool set){
+    visualizationType = set;
 }
 
 void Simulation::visualizeQSurface()
@@ -68,33 +77,25 @@ void Simulation::visualizeQSurface()
 }
 
 void Simulation::visualizeQScatter(){
-    QScatterDataArray *m_magneticFieldArray = new QScatterDataArray;
-
-    int arraySize = m_gridSize * m_gridSize;
-    if (arraySize != m_magneticFieldArray->size())
-        m_magneticFieldArray->resize(arraySize);
+    QVector<QCustom3DItem*> m_arrows = dataController->getSurfaceGraph()->getArrows();
 
     int i, j, idx;
-    QScatterDataItem *ptrToDataArray = &m_magneticFieldArray->first();
     for (j = 0; j < m_gridSize; j++) {
 
         for (i = 0; i < m_gridSize; i++) {
-            idx = (j * m_gridSize) + i;
+            idx = (i * m_gridSize) + j;
             //qDebug() << i << " - " << j << " : " << (0.16 * i - 8) << " " << (0.16 * j - 8);
-            ptrToDataArray->setPosition(QVector3D(((16 / m_gridSize_double) * i - 8), 0, ((16 / m_gridSize_double) * j - 8)));
-            //qDebug() << "ATAN: " << atan2(vy[(i * m_gridSize) + j], vx[(i * m_gridSize) + j]);
-            //qDebug() << "X: " << vx[(i * m_gridSize) + j] << "Y: " << vy[(i * m_gridSize) + j];
-
-            QQuaternion rotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 1.0f, (atan2(vy[idx], vx[idx])*(180.0/pi)));
-
-            ptrToDataArray->setRotation(rotation);
-
-            ptrToDataArray++;
+            QQuaternion rotation = QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.5f, (atan2(vy[idx], -vx[idx])*(180.0/pi)));
+            m_arrows.at(idx)->setRotation(rotation);
+            /*if(vx[idx] > 0.1 || vx[idx] < -0.1 ||  vy[idx] > 0.1 || vy[idx] < -0.1){
+                qDebug() << "X: " << vx[idx] << "Y: " << vy[idx];
+                qDebug() << "ATAN: " << atan2(vy[idx], vx[idx])*(180.0/pi);
+            }*/
         }
     }
 
     //Data controller -> setData
-    dataController->getScatterGraph()->resetData(m_magneticFieldArray);
+    //dataController->getScatterGraph()->resetData(m_magneticFieldArray);
 }
 
 fftw_real Simulation::getDataPoint(int idx)

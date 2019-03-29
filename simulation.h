@@ -19,12 +19,13 @@ class Simulation : public QObject
         int DENSITY = 1;
         int VELOCITY = 2;
         int FORCE = 3;
-
+        bool visualizationType = true;
         void drag(int X, int Y, float dx, float dy);
 
     public slots:
         void update();
         void setDataSet(QString dataSet);
+        void setVisualizationType(bool set);
 
     private:
         int visualize_data = Simulation::DENSITY;

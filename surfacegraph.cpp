@@ -4,10 +4,20 @@
 
 #include <QtDataVisualization/QValue3DAxis>
 #include <QtDataVisualization/Q3DTheme>
+#include <QtDataVisualization/QCustom3DItem>
 #include <QtGui/QImage>
 #include <QtCore/qmath.h>
 
 using namespace QtDataVisualization;
+
+static const float verticalRange = 8.0f;
+static const float horizontalRange = verticalRange;
+static const float ellipse_a = horizontalRange / 3.0f;
+static const float ellipse_b = verticalRange;
+static const float doublePi = float(M_PI) * 2.0f;
+static const float radiansToDegrees = 360.0f / doublePi;
+static const float animationFrames = 30.0f;
+static const double gridSize = 100.0;
 
 SurfaceGraph::SurfaceGraph(Q3DSurface *surface, InputHandler *inputhandler):
     m_graph(surface)
@@ -27,6 +37,7 @@ SurfaceGraph::SurfaceGraph(Q3DSurface *surface, InputHandler *inputhandler):
     m_simSinProxy = new QSurfaceDataProxy();
     m_simSinSeries = new QSurface3DSeries(m_simSinProxy);
 
+
     this->enableSimulationModel(true);
 }
 
@@ -40,13 +51,48 @@ void SurfaceGraph::resetData(QSurfaceDataArray *dataArray)
     m_simSinProxy->resetArray(dataArray);
 }
 
+void SurfaceGraph::generateData()
+{
+
+    QImage color = QImage(2, 2, QImage::Format_RGB32);
+           color.fill(Qt::red);
+    for (int i = 0; i < gridSize; i++) {
+
+        for (int j = 0; j < gridSize; j++) {
+            QQuaternion rotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 0.0f, 0);
+
+
+
+            QCustom3DItem *item = new QCustom3DItem(":/narrowarrow.obj",
+                                                    QVector3D((1.0f * i), 0.02f, (1.0f * j)),
+                                                    QVector3D(0.01f, 0.01f, 0.01f),
+                                                    rotation,
+                                                    color);
+
+
+            item->setRotation(QQuaternion::fromAxisAndAngle(0.5f, 0.0f, 1.0f, 90));
+            //qDebug() << i << " - " << j << " : " << (0.16 * i - 8) << " " << (0.16 * j - 8);
+
+            m_arrows.append(item);
+
+            m_graph->addCustomItem(item);
+        }
+    }
+
+
+}
+
+
+QVector<QCustom3DItem*> SurfaceGraph::getArrows(){
+    return m_arrows;
+}
 
 void SurfaceGraph::enableSimulationModel(bool enable)
 {
     m_simSinSeries->setDrawMode(QSurface3DSeries::DrawSurface);
     m_simSinSeries->setFlatShadingEnabled(false);
     m_simSinSeries->setItemLabelVisible(false);
-    m_simSinSeries->setFlatShadingEnabled(false);
+
 
     m_graph->axisX()->setRange(-1.0f, 201.0f);
     m_graph->axisY()->setRange(0.0f, 0.2f);
