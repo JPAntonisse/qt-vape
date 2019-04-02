@@ -7,6 +7,7 @@
 #include <QtDataVisualization/QCustom3DItem>
 #include <QtGui/QImage>
 #include <QtCore/qmath.h>
+#include <cstdlib>
 
 using namespace QtDataVisualization;
 
@@ -18,6 +19,7 @@ static const float doublePi = float(M_PI) * 2.0f;
 static const float radiansToDegrees = 360.0f / doublePi;
 static const float animationFrames = 30.0f;
 static const double gridSize = 100.0;
+const int int_gridSize = 100;
 
 SurfaceGraph::SurfaceGraph(Q3DSurface *surface, InputHandler *inputhandler):
     m_graph(surface)
@@ -54,32 +56,89 @@ void SurfaceGraph::resetData(QSurfaceDataArray *dataArray)
 void SurfaceGraph::generateData()
 {
 
+    qDebug() << "SIZE: " << m_graph->customItems().size();
     QImage color = QImage(2, 2, QImage::Format_RGB32);
-           color.fill(Qt::red);
+    color.fill(Qt::red);
+
+    //qDebug() << "SIZE TEST: " << m_arrows.size();
+
     for (int i = 0; i < gridSize; i++) {
 
         for (int j = 0; j < gridSize; j++) {
-            QQuaternion rotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 0.0f, 0);
+
+            QQuaternion yRotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 0.0f, 0);
 
 
-
-            QCustom3DItem *item = new QCustom3DItem(":/narrowarrow.obj",
-                                                    QVector3D((1.0f * i), 0.02f, (1.0f * j)),
+            QCustom3DItem *item = new QCustom3DItem(":/arrow3.obj",
+                                                    QVector3D((1.0f * i), 0.1f, (1.0f * j)),
                                                     QVector3D(0.01f, 0.01f, 0.01f),
-                                                    rotation,
-                                                    color);
-
-
-            item->setRotation(QQuaternion::fromAxisAndAngle(0.5f, 0.0f, 1.0f, 90));
-            //qDebug() << i << " - " << j << " : " << (0.16 * i - 8) << " " << (0.16 * j - 8);
-
+                                                    yRotation,
+                                                    color);         
             m_arrows.append(item);
-
             m_graph->addCustomItem(item);
         }
     }
+    qDebug() << "SIZE 2: " << m_graph->customItems().size();
 
+}
 
+void SurfaceGraph::clearData(){
+    for(int i=0; i < m_arrows.size(); i++){
+        m_graph->releaseCustomItem(m_arrows.at(i));
+//        qDebug() << m_arrows.at(i)->position().x() << " - " << m_arrows.at(i)->position().z();
+    }
+    m_arrows.clear();
+   //m_graph->data(
+    qDebug() << m_graph->customItems().size();
+}
+
+void SurfaceGraph::resetGrid(QString type){
+    if(type == "uniform"){
+        int z=0;
+        for(int i=0; i < gridSize; i++){
+            for (int j = 0; j < gridSize; j++) {
+                m_arrows.at(z)->setPosition( QVector3D((1.0f * i), 0.1f, (1.0f * j)));
+                z++;
+            }
+        }
+    }else{
+        for(int i=0; i < m_arrows.size(); i++){
+            float LO = 0;
+            float HI = 100;
+            float rX = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+            float rY = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+            //float randomPositionX = (rand() % (int_gridSize*100)) / 100;
+            //float randomPositionY = (rand() % (int_gridSize*100)) / 100;
+
+            qDebug() << rX << " - " << rY;
+            m_arrows.at(i)->setPosition( QVector3D(rX, 0.1f, rY));
+        }
+    }
+}
+
+void SurfaceGraph::generateRandomGridData(){
+    qDebug() << "SIZE 1: " << m_graph->customItems().size();
+    QImage color = QImage(2, 2, QImage::Format_RGB32);
+    color.fill(Qt::red);
+    for (int i = 0; i < gridSize*gridSize; i++) {
+        float LO = 0;
+        float HI = 100;
+        float rX = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+        float rY = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+
+        QQuaternion yRotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 0.0f, 0);
+
+        QCustom3DItem *item = new QCustom3DItem(":/arrow3.obj",
+                                                QVector3D(rX, 0.1f, rY),
+                                                QVector3D(0.01f, 0.01f, 0.01f),
+                                                yRotation,
+                                                color);
+
+        m_arrows.append(item);
+        m_graph->addCustomItem(item);
+    }
+
+    qDebug() << "SIZE 3: " << m_graph->customItems().size();
 }
 
 
@@ -94,10 +153,10 @@ void SurfaceGraph::enableSimulationModel(bool enable)
     m_simSinSeries->setItemLabelVisible(false);
 
 
-    m_graph->axisX()->setRange(-1.0f, 201.0f);
+    m_graph->axisX()->setRange(-1.0f, 101.0f);
     m_graph->axisY()->setRange(0.0f, 0.2f);
     m_graph->setAspectRatio(20);
-    m_graph->axisZ()->setRange(-1.0f, 201.0f);
+    m_graph->axisZ()->setRange(-1.0f, 101.0f);
 
     m_graph->addSeries(m_simSinSeries);
 

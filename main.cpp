@@ -74,6 +74,9 @@ int main(int argc, char **argv)
     QObject::connect(item, SIGNAL(setBlackToYellowGradient()),
                      surfaceGraph, SLOT(setBlackToYellowGradient()));
 
+    QObject::connect(item, SIGNAL(setGridType(QString)),
+                     container_m, SLOT(setGridType(QString)));
+
     QObject::connect(item, SIGNAL(setGreenToRedGradient()),
                      surfaceGraph, SLOT(setGreenToRedGradient()));
 

@@ -40,13 +40,16 @@ class SurfaceGraph : public QObject
         void adjustXMax(int max);
         void adjustZMin(int min);
         void adjustZMax(int max);
+        void clearData();
         void generateData();
+        void generateRandomGridData();
     public Q_SLOTS:
         void drawWireFrame(bool);
         void setBlackToYellowGradient();
         void setGreenToRedGradient();
         void toggleModeItem() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItem); }
         QVector<QCustom3DItem*> getArrows();
+        void resetGrid(QString type);
     private:
         Q3DSurface *m_graph;
         QHeightMapSurfaceDataProxy *m_heightMapProxy;

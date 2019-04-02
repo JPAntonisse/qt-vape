@@ -2,6 +2,9 @@
     <qresource prefix="/">
         <file>ControlPanel.qml</file>
         <file>narrowarrow.obj</file>
+        <file>arrow2.obj</file>
+        <file>arrow3.obj</file>
+        <file>arrow4.obj</file>
     </qresource>
     <qresource prefix="/content">
         <file>ColorPicker.qml</file>

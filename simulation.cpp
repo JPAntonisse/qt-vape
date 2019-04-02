@@ -11,6 +11,14 @@
 const int m_gridSize = 100;
 const double m_gridSize_double = 100.0;
 const double pi = 3.14159265358979323846;
+static const float verticalRange = 8.0f;
+static const float horizontalRange = verticalRange;
+static const float ellipse_a = horizontalRange / 3.0f;
+static const float ellipse_b = verticalRange;
+static const float doublePi = float(M_PI) * 2.0f;
+static const float radiansToDegrees = 360.0f / doublePi;
+static const float animationFrames = 30.0f;
+static const double gridSize = 100.0;
 
 Simulation::~Simulation()
 {
@@ -78,24 +86,42 @@ void Simulation::visualizeQSurface()
 
 void Simulation::visualizeQScatter(){
     QVector<QCustom3DItem*> m_arrows = dataController->getSurfaceGraph()->getArrows();
-
     int i, j, idx;
     for (j = 0; j < m_gridSize; j++) {
 
         for (i = 0; i < m_gridSize; i++) {
+
             idx = (i * m_gridSize) + j;
-            //qDebug() << i << " - " << j << " : " << (0.16 * i - 8) << " " << (0.16 * j - 8);
-            QQuaternion rotation = QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.5f, (atan2(vy[idx], -vx[idx])*(180.0/pi)));
+            QQuaternion rotation = QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, getRotationArrow(idx, m_arrows.at(idx)));
+
             m_arrows.at(idx)->setRotation(rotation);
-            /*if(vx[idx] > 0.1 || vx[idx] < -0.1 ||  vy[idx] > 0.1 || vy[idx] < -0.1){
-                qDebug() << "X: " << vx[idx] << "Y: " << vy[idx];
-                qDebug() << "ATAN: " << atan2(vy[idx], vx[idx])*(180.0/pi);
-            }*/
         }
     }
 
     //Data controller -> setData
     //dataController->getScatterGraph()->resetData(m_magneticFieldArray);
+}
+void Simulation::setGridType(bool type){
+    uniformGrid = type;
+}
+
+
+void Simulation::setArrowSize(fftw_real force, QCustom3DItem* arrow){
+    if(force > 0.04){
+        arrow->setScaling(QVector3D(0.04f, 0.04f, 0.04f));
+    }else if (force < 0.02){
+        arrow->setScaling(QVector3D(0.02f, 0.02f, 0.02f));
+    }else{
+        arrow->setScaling(QVector3D(0.03f, 0.03f, 0.03f));
+    }
+}
+
+bool Simulation::isUniformGrid(){
+    return uniformGrid;
+}
+
+void Simulation::setUniformGrid(bool set){
+    uniformGrid = set;
 }
 
 fftw_real Simulation::getDataPoint(int idx)
@@ -109,6 +135,47 @@ fftw_real Simulation::getDataPoint(int idx)
     }
 
     return rho[idx];
+}
+
+float Simulation::getRotationArrow(int idx, QCustom3DItem* arrow){
+    if(!uniformGrid){
+        fftw_real ix, iy = 0;
+        ix = interpolate(arrow, true);
+        iy = interpolate(arrow, false);
+        setArrowSize(ix + iy, arrow);
+        return atan2(-iy, ix)*(180.0/pi);
+    }else{
+        if (visualize_data == Simulation::VELOCITY) {
+            setArrowSize(vy[idx] + vx[idx], arrow);
+            return atan2(-vy[idx], vx[idx])*(180.0/pi);
+        } else if (visualize_data == Simulation::FORCE) {
+            setArrowSize(fy[idx] + fx[idx], arrow);
+            return atan2(-fy[idx], fx[idx])*(180.0/pi);
+        }
+    }
+}
+
+double Simulation::interpolate(QCustom3DItem* arrow, bool direction){
+    int x = floor(arrow->position().x());
+    double xdiff = arrow->position().x() - floor(arrow->position().x());
+    int z = floor(arrow->position().z());
+    double zdiff = arrow->position().z() - floor(arrow->position().x());
+
+    double sum = 0;
+    if (visualize_data == Simulation::VELOCITY) {
+        if(direction){
+            sum =  ((zdiff * vx[(x * m_gridSize) + z]) + ((1- zdiff) * vx[(x * m_gridSize) + z+1]) + (xdiff * vx[((x+1) * m_gridSize) + z]) + ((1-xdiff) * vx[((x+1) * m_gridSize) + z+1])) / 4;
+        }else{
+            sum =  ((zdiff * vy[(x * m_gridSize) + z]) + ((1- zdiff) * vy[(x * m_gridSize) + z+1]) + (xdiff * vy[((x+1) * m_gridSize) + z]) + ((1-xdiff) * vy[((x+1) * m_gridSize) + z+1])) / 4;
+        }
+    }else if (visualize_data == Simulation::FORCE) {
+        if(direction){
+            sum =  ((zdiff * fx[(x * m_gridSize) + z]) + ((1- zdiff) * fx[(x * m_gridSize) + z+1]) + (xdiff * fx[((x+1) * m_gridSize) + z]) + ((1-xdiff) * fx[((x+1) * m_gridSize) + z+1])) / 4;
+        }else{
+            sum =  ((zdiff * fy[(x * m_gridSize) + z]) + ((1- zdiff) * fy[(x * m_gridSize) + z+1]) + (xdiff * fy[((x+1) * m_gridSize) + z]) + ((1-xdiff) * fy[((x+1) * m_gridSize) + z+1])) / 4;
+        }
+    }
+    return sum;
 }
 
 void Simulation::setDataSet(QString dataSet)
