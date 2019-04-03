@@ -19,6 +19,8 @@ Rectangle {
     signal scaleGraph(double value)
     signal setGridType(string type)
     signal setGlypColor(bool show)
+    signal setRandomArrows(double value);
+    signal heightGlyphs(double value);
 
 
     Material.theme: Material.Dark
