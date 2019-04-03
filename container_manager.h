@@ -29,6 +29,7 @@ class ContainerManager : public QObject
         void setBlackToYellowGradient();
         void setGreenToRedGradient();
         void setGlypColor(bool value);
+        void setArrowSize(double scale);
     private:
         QWidget *m_surface;
         QWidget *m_scatter;

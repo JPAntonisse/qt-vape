@@ -342,6 +342,42 @@ Page {
 
                 }
 
+                Row {
+                    width: column.width - 2 * column.padding
+                    spacing: 15
+                    Text {
+                        height: 20
+                        color: "#ffffff"
+                        text: qsTr("Arrow Size")
+                        anchors.topMargin: 15
+                        anchors.top: parent.top
+                        verticalAlignment: Text.AlignTop
+                        font.pixelSize: 13
+                    }
+                }
+
+
+                Row {
+                    width: column.width - 2 * column.padding
+                    spacing: 15
+                    Slider {
+                        width: column.width - 2 * column.padding
+                        id: arrowSize
+                        from: 0.2
+                        stepSize: 0.2
+                        value: 1
+                        live: false
+                        to: 2
+                        onValueChanged: {
+                            if(modeItemRB.checked){
+                                root.setArrowSize(arrowSize.value)
+                            }else{
+                                arrowSize.value = 1
+                            }
+                        }
+                    }
+                }
+
             }
         }
 
@@ -415,6 +451,7 @@ Page {
                             font.pixelSize: 13
                         }
                     }
+
                     Slider {
                         width: column.width - 2 * column.padding
                         id: randomPoints
@@ -431,6 +468,7 @@ Page {
                             }
                         }
                     }
+
                     Row {
                         id: row4
                         width: parent.width - 2 * parent.padding

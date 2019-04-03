@@ -79,7 +79,6 @@ void SurfaceGraph::generateData()
         }
     }
     qDebug() << "amount of Arrows: " << m_graph->customItems().size();
-
 }
 
 void SurfaceGraph::clearData(){
@@ -129,7 +128,6 @@ void SurfaceGraph::generateRandomGridData(int size){
                                                 QVector3D(0.01f, 0.01f, 0.01f),
                                                 yRotation,
                                                 color);
-
         m_arrows.append(item);
         m_graph->addCustomItem(item);
     }

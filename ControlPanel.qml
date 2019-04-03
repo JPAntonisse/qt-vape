@@ -21,7 +21,7 @@ Rectangle {
     signal setGlypColor(bool show)
     signal setRandomArrows(double value);
     signal heightGlyphs(double value);
-
+    signal setArrowSize(double amount);
 
     Material.theme: Material.Dark
     Material.accent: Material.Blue

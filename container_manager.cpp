@@ -82,13 +82,18 @@ void ContainerManager::heightGlyphs(double height){
 }
 
 void ContainerManager::setGlypColor(bool value){
-    qDebug() << " value: " << value;
+    //qDebug() << " value: " << value;
     m_simulation->setGlyphColorActive(value);
     m_simulation->setColorMap(QString('greenred'));
 
     if(value == false){
         m_simulation->recolorToStandard();
     }
+}
+
+void ContainerManager::setArrowSize(double scale){
+    qDebug() << "Scale " << scale;
+    m_simulation->setArrowScale(scale);
 }
 
 

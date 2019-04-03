@@ -5,6 +5,7 @@
         <file>arrow2.obj</file>
         <file>arrow3.obj</file>
         <file>arrow4.obj</file>
+        <file>arrow5.obj</file>
     </qresource>
     <qresource prefix="/content">
         <file>ColorPicker.qml</file>

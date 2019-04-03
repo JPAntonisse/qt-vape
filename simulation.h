@@ -39,6 +39,7 @@ class Simulation : public QObject
         void setColorMap(QString type);
         void setGlyphColorActive(bool set);
         void recolorToStandard();
+        void setArrowScale(double scale);
     private:
         int visualize_data = Simulation::DENSITY;
         float dt = 0.4;                                 //simulation time step
@@ -72,6 +73,7 @@ class Simulation : public QObject
 
         QString colorMapType = QString('greenred');
         int clamp(float x);
+        double arrowScale = 1.0;
         int rotateClamp(int x, int min, int max);
 };
 

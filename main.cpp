@@ -97,6 +97,9 @@ int main(int argc, char **argv)
     QObject::connect(item, SIGNAL(heightGlyphs(double)),
                     container_m, SLOT(heightGlyphs(double)));
 
+    QObject::connect(item, SIGNAL(setArrowSize(double)),
+                    container_m, SLOT(setArrowSize(double)));
+
 
     // SURFACEGRAPH
     QObject::connect(item, SIGNAL(drawWireFrame(bool)),
