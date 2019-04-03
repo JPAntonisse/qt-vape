@@ -13,6 +13,7 @@ Rectangle {
     signal drawWireFrame(bool checked)
     signal setDataSet(string dataSet)
     signal showSurface(bool show)
+    signal hueRotation(double value)
 
     Material.theme: Material.Dark
     Material.accent: Material.Blue

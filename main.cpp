@@ -94,6 +94,10 @@ int main(int argc, char **argv)
     QObject::connect(item, SIGNAL(setDataSet(QString)),
                      simulation, SLOT(setDataSet(QString)));
 
+    QObject::connect(item, SIGNAL(hueRotation(double)),
+                     surfaceGraph, SLOT(hueRotation(double)));
+
+
     widget->show();
 
 

@@ -79,10 +79,13 @@ Page {
             border.color: "black"
             gradient: Gradient {
                 orientation: Gradient.Horizontal
-                GradientStop { position: 0.0; color: "black" }
-                GradientStop { position: 0.33; color: "blue" }
-                GradientStop { position: 0.67; color: "red" }
-                GradientStop { position: 1.0; color: "yellow" }
+                GradientStop { position: (-1.0 + hue.value); color: "yellow" }
+                GradientStop { position: (-0.67 + hue.value); color: "red" }
+                GradientStop { position: (-0.33 + hue.value); color: "blue" }
+                GradientStop { position: (0.0 + hue.value); color: "black" }
+                GradientStop { position: (0.33 + hue.value); color: "blue" }
+                GradientStop { position: (0.67 + hue.value); color: "red" }
+                GradientStop { position: (1.0 + hue.value); color: "yellow" }
             }
             MouseArea {
                 anchors.fill: parent
@@ -100,15 +103,43 @@ Page {
             border.color: "black"
             gradient: Gradient {
                 orientation: Gradient.Horizontal
-                GradientStop { position: 0.0; color: "darkgreen" }
-                GradientStop { position: 0.33; color: "yellow" }
-                GradientStop { position: 0.67; color: "red" }
-                GradientStop { position: 1.0; color: "darkred" }
+                GradientStop { position: (-0.99 + hue.value); color: "darkred" }
+                GradientStop { position: (-0.67 + hue.value); color: "red" }
+                GradientStop { position: (-0.33 + hue.value); color: "yellow" }
+                GradientStop { position: (0.0 + hue.value); color: "darkgreen" }
+                GradientStop { position: (0.33 + hue.value); color: "yellow" }
+                GradientStop { position: (0.67 + hue.value); color: "red" }
+                GradientStop { position: (0.99 + hue.value); color: "darkred" }
             }
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
                     root.setGreenToRedGradient()
+                }
+            }
+        }
+
+        Row {
+            id: row2
+            width: column.width - 2 * column.padding
+            spacing: 15
+            Text {
+                id: element2
+                height: 20
+                color: "#ffffff"
+                text: qsTr("Hue rotation")
+                anchors.topMargin: 15
+                anchors.top: parent.top
+                verticalAlignment: Text.AlignTop
+                font.pixelSize: 13
+            }
+
+            Slider {
+                id: hue
+                stepSize: 0.01
+                value: 0
+                onValueChanged: {
+                    root.hueRotation(value)
                 }
             }
         }
