@@ -52,19 +52,25 @@ void Simulation::update()
     solve(m_gridSize, vx, vy, vx0, vy0, visc, dt);
     diffuseMatter(m_gridSize, vx, vy, rho, rho0, dt);
 
+    setDivergence();
+
 //    if(type) visualizeQSurface();
 //    else visualizeQScatter();
 
-    if (visualizationType){
-        visualizeQSurface();
-    }else{
-        visualizeQScatter();
-        visualizeQSurface();
-    }
+    visualize();
 }
 
 int Simulation::getGridSize(){
     return m_gridSize;
+}
+
+void Simulation::visualize(){
+    if (visualizationType){
+        visualizeQSurface();
+    } else {
+        visualizeQScatter();
+        visualizeQSurface();
+    }
 }
 
 void Simulation::setVisualizationType(bool set){
@@ -180,6 +186,8 @@ fftw_real Simulation::getDataPoint(int idx)
         return sqrt(pow(vx[idx], 2) + pow(vy[idx], 2)) * 20;
     } else if (visualize_data == Simulation::FORCE) {
         return sqrt(pow(fx[idx], 2) + pow(fy[idx], 2));
+    } else if (visualize_data == Simulation::DIVERGENCE) {
+        return sqrt(pow(divx[idx], 2) + pow(divy[idx], 2)) * 40;
     }
 
     return rho[idx];
@@ -249,13 +257,17 @@ double Simulation::interpolate(QCustom3DItem* arrow, bool direction){
 
 void Simulation::setDataSet(QString dataSet)
 {
-    qDebug() << "set data set : " << dataSet;
     if(dataSet == (QString) "density") {
         visualize_data = Simulation::DENSITY;
     } else if (dataSet == (QString) "velocity") {
         visualize_data = Simulation::VELOCITY;
     } else if (dataSet == (QString) "force") {
         visualize_data = Simulation::FORCE;
+    } else if (dataSet == (QString) "divergence") {
+        visualize_data = Simulation::DIVERGENCE;
+    }
+    if (pause) {
+        visualize();
     }
 }
 
@@ -292,6 +304,18 @@ void Simulation::setForces()
         fy[i] *= 0.95;
         vx0[i]    = fx[i];
         vy0[i]    = fy[i];
+        vvx0[i]    = vx[i];
+        vvy0[i]    = vy[i];
+
+    }
+}
+void Simulation::setDivergence()
+{
+    int i;
+    for (i = 0; i < m_gridSize * m_gridSize; i++)
+    {
+        divx[i]   = vvx0[i] - vx[i];
+        divy[i]   = vvy0[i] - vy[i];
     }
 }
 
@@ -302,8 +326,12 @@ void Simulation::init(int gridSize)
     dim      = gridSize * 2 * (gridSize/2+1) * sizeof(fftw_real);//Allocate data structures
     vx       = static_cast<fftw_real*>(malloc(dim));
     vy       = static_cast<fftw_real*>(malloc(dim));
+    divx     = static_cast<fftw_real*>(malloc(dim));
+    divy     = static_cast<fftw_real*>(malloc(dim));
     vx0      = static_cast<fftw_real*>(malloc(dim));
     vy0      = static_cast<fftw_real*>(malloc(dim));
+    vvx0      = static_cast<fftw_real*>(malloc(dim));
+    vvy0      = static_cast<fftw_real*>(malloc(dim));
 
     dim     = gridSize * gridSize * sizeof(fftw_real);//Allocate data structures
     fx      = static_cast<fftw_real*>(malloc(dim));
@@ -315,7 +343,7 @@ void Simulation::init(int gridSize)
     plan_cr = rfftw2d_create_plan(gridSize, gridSize, FFTW_COMPLEX_TO_REAL, FFTW_IN_PLACE);
 
     for (i = 0; i < gridSize * gridSize; i++) //Initialize data structures to 0
-    { vx[i] = vy[i] = vx0[i] = vy0[i] = fx[i] = fy[i] = rho[i] = rho0[i] = 0.0f; }
+    { vx[i] = vy[i] = vx0[i] = vy0[i] = vvx0[i] = vvy0[i] = fx[i] = fy[i] = rho[i] = rho0[i] = divx[i] = divy[i] = 0.0f; }
 
 
 }

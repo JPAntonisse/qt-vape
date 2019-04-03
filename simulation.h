@@ -19,12 +19,14 @@ class Simulation : public QObject
         int DENSITY = 1;
         int VELOCITY = 2;
         int FORCE = 3;
+        int DIVERGENCE = 4;
         void drag(int X, int Y, float dx, float dy);
 
     public slots:
         void update();
         void setDataSet(QString dataSet);
         void pauseSimulation(bool i_pause);
+        void visualize();
         void setVisualizationType(bool set);
         void setArrowSize(fftw_real force, QCustom3DItem* arrow);
         void setArrowColor(fftw_real force, QCustom3DItem* arrow);
@@ -45,6 +47,8 @@ class Simulation : public QObject
         fftw_real *vx0, *vy0;                           //(vx0,vy0) = velocity field at the previous moment
         fftw_real *fx, *fy;                             //(fx,fy)   = user-controlled simulation forces, steered with the mouse
         fftw_real *rho, *rho0;                          //smoke density at the current (rho) and previous (rho0) moment
+        fftw_real *divx, *divy;                                 //divergence
+        fftw_real *vvx0, *vvy0;                                 //divergence
         rfftwnd_plan plan_rc, plan_cr;                  //simulation domain discretization
         DataController *dataController;
         bool visualizationType = true;
@@ -57,6 +61,7 @@ class Simulation : public QObject
         bool colorMapActive = false;
     private:
         void setForces();
+        void setDivergence();
         void visualizeQSurface();
         void visualizeQScatter();
 
