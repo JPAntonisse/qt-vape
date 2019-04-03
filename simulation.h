@@ -35,6 +35,8 @@ class Simulation : public QObject
         void setUniformGrid(bool set);
         int getGridSize();
         void setColorMap(QString type);
+        void setGlyphColorActive(bool set);
+        void recolorToStandard();
     private:
         int visualize_data = Simulation::DENSITY;
         float dt = 0.4;                                 //simulation time step

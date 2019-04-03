@@ -18,6 +18,7 @@ Rectangle {
     signal hueRotation(double value)
     signal scaleGraph(double value)
     signal setGridType(string type)
+    signal setGlypColor(bool show)
 
 
     Material.theme: Material.Dark

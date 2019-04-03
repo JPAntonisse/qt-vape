@@ -27,6 +27,7 @@ class ContainerManager : public QObject
         void addRandomGridArrows(int amount);
         void setBlackToYellowGradient();
         void setGreenToRedGradient();
+        void setGlypColor(bool value);
     private:
         QWidget *m_surface;
         QWidget *m_scatter;
