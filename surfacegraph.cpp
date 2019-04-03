@@ -56,9 +56,8 @@ void SurfaceGraph::resetData(QSurfaceDataArray *dataArray)
 void SurfaceGraph::generateData()
 {
 
-    qDebug() << "SIZE: " << m_graph->customItems().size();
     QImage color = QImage(2, 2, QImage::Format_RGB32);
-    color.fill(Qt::red);
+    color.fill(Qt::green);
 
     //qDebug() << "SIZE TEST: " << m_arrows.size();
 
@@ -73,54 +72,52 @@ void SurfaceGraph::generateData()
                                                     QVector3D((1.0f * i), 0.1f, (1.0f * j)),
                                                     QVector3D(0.01f, 0.01f, 0.01f),
                                                     yRotation,
-                                                    color);         
+                                                    color);
+
             m_arrows.append(item);
             m_graph->addCustomItem(item);
         }
     }
-    qDebug() << "SIZE 2: " << m_graph->customItems().size();
+
 
 }
 
 void SurfaceGraph::clearData(){
     for(int i=0; i < m_arrows.size(); i++){
         m_graph->releaseCustomItem(m_arrows.at(i));
-//        qDebug() << m_arrows.at(i)->position().x() << " - " << m_arrows.at(i)->position().z();
     }
     m_arrows.clear();
-   //m_graph->data(
     qDebug() << m_graph->customItems().size();
 }
 
-void SurfaceGraph::resetGrid(QString type){
-    if(type == "uniform"){
-        int z=0;
-        for(int i=0; i < gridSize; i++){
-            for (int j = 0; j < gridSize; j++) {
-                m_arrows.at(z)->setPosition( QVector3D((1.0f * i), 0.1f, (1.0f * j)));
-                z++;
-            }
-        }
-    }else{
-        for(int i=0; i < m_arrows.size(); i++){
-            float LO = 0;
-            float HI = 100;
-            float rX = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
-            float rY = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
-            //float randomPositionX = (rand() % (int_gridSize*100)) / 100;
-            //float randomPositionY = (rand() % (int_gridSize*100)) / 100;
+//void SurfaceGraph::resetGrid(QString type){
+//    if(type == "uniform"){
+//        int z=0;
+//        for(int i=0; i < gridSize; i++){
+//            for (int j = 0; j < gridSize; j++) {
+//                m_arrows.at(z)->setPosition( QVector3D((1.0f * i), 0.1f, (1.0f * j)));
+//                z++;
+//            }
+//        }
+//    }else{
+//        for(int i=0; i < m_arrows.size(); i++){
+//            float LO = 0;
+//            float HI = 100;
+//            float rX = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+//            float rY = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+//            //float randomPositionX = (rand() % (int_gridSize*100)) / 100;
+//            //float randomPositionY = (rand() % (int_gridSize*100)) / 100;
 
-            qDebug() << rX << " - " << rY;
-            m_arrows.at(i)->setPosition( QVector3D(rX, 0.1f, rY));
-        }
-    }
-}
+//            qDebug() << rX << " - " << rY;
+//            m_arrows.at(i)->setPosition( QVector3D(rX, 0.1f, rY));
+//        }
+//    }
+//}
 
-void SurfaceGraph::generateRandomGridData(){
-    qDebug() << "SIZE 1: " << m_graph->customItems().size();
+void SurfaceGraph::generateRandomGridData(int size){
     QImage color = QImage(2, 2, QImage::Format_RGB32);
-    color.fill(Qt::red);
-    for (int i = 0; i < gridSize*gridSize; i++) {
+    color.fill(Qt::green);
+    for (int i = 0; i < size; i++) {
         float LO = 0;
         float HI = 100;
         float rX = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
@@ -138,7 +135,6 @@ void SurfaceGraph::generateRandomGridData(){
         m_graph->addCustomItem(item);
     }
 
-    qDebug() << "SIZE 3: " << m_graph->customItems().size();
 }
 
 

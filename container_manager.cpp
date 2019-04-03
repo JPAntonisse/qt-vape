@@ -49,9 +49,28 @@ void ContainerManager::setGridType(QString type)
         qDebug() << "Random";
         m_simulation->setUniformGrid(false);
         m_surfaceGraph->clearData();
-        m_surfaceGraph->generateRandomGridData();
+        m_surfaceGraph->generateRandomGridData(m_simulation->getGridSize()^2);
     }
 
+}
+
+void ContainerManager::setRandomGridAmountOfArrows(int amount){
+    m_surfaceGraph->clearData();
+    m_surfaceGraph->generateRandomGridData(amount);
+}
+
+void ContainerManager::addRandomGridArrows(int amount){
+    m_surfaceGraph->generateRandomGridData(amount);
+}
+
+void ContainerManager::setBlackToYellowGradient(){
+    m_surfaceGraph->setBlackToYellowGradient();
+    m_simulation->setColorMap(QString('blackyellow'));
+}
+
+void ContainerManager::setGreenToRedGradient(){
+    m_surfaceGraph->setGreenToRedGradient();
+    m_simulation->setColorMap(QString('greenred'));
 }
 
 

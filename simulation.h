@@ -26,11 +26,14 @@ class Simulation : public QObject
         void setDataSet(QString dataSet);
         void setVisualizationType(bool set);
         void setArrowSize(fftw_real force, QCustom3DItem* arrow);
+        void setArrowColor(fftw_real force, QCustom3DItem* arrow);
         float getRotationArrow(int idx, QCustom3DItem* arrow);
         double interpolate(QCustom3DItem* arrow, bool direction);
         void setGridType(bool type);
         bool isUniformGrid();
         void setUniformGrid(bool set);
+        int getGridSize();
+        void setColorMap(QString type);
     private:
         int visualize_data = Simulation::DENSITY;
         float dt = 0.4;                                 //simulation time step
@@ -47,7 +50,7 @@ class Simulation : public QObject
         QString m_dataset;
 
         SurfaceGraph *m_surface;
-
+        bool colorMapActive = false;
     private:
         void setForces();
         void visualizeQSurface();
@@ -58,6 +61,7 @@ class Simulation : public QObject
         void solve(int n, fftw_real* vx, fftw_real* vy, fftw_real* vx0, fftw_real* vy0, fftw_real visc, fftw_real dt);
         void diffuseMatter(int n, fftw_real *vx, fftw_real *vy, fftw_real *rho, fftw_real *rho0, fftw_real dt);
 
+        QString colorMapType = QString('greenred');
         int clamp(float x);
         int rotateClamp(int x, int min, int max);
 };

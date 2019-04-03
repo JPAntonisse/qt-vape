@@ -72,13 +72,13 @@ int main(int argc, char **argv)
                      simulation, &Simulation::drag);
 
     QObject::connect(item, SIGNAL(setBlackToYellowGradient()),
-                     surfaceGraph, SLOT(setBlackToYellowGradient()));
+                     container_m, SLOT(setBlackToYellowGradient()));
 
     QObject::connect(item, SIGNAL(setGridType(QString)),
                      container_m, SLOT(setGridType(QString)));
 
     QObject::connect(item, SIGNAL(setGreenToRedGradient()),
-                     surfaceGraph, SLOT(setGreenToRedGradient()));
+                     container_m, SLOT(setGreenToRedGradient()));
 
     QObject::connect(item, SIGNAL(drawWireFrame(bool)),
                      surfaceGraph, SLOT(drawWireFrame(bool)));

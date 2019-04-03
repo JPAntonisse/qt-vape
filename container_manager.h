@@ -23,6 +23,10 @@ class ContainerManager : public QObject
     public Q_SLOTS:
         void showSurface(bool set);
         void setGridType(QString type);
+        void setRandomGridAmountOfArrows(int amount);
+        void addRandomGridArrows(int amount);
+        void setBlackToYellowGradient();
+        void setGreenToRedGradient();
     private:
         QWidget *m_surface;
         QWidget *m_scatter;
