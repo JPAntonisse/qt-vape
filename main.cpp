@@ -31,41 +31,43 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
 
     Q3DSurface *graph = new Q3DSurface();
-
     QWidget *container_surface = QWidget::createWindowContainer(graph);
 
     InputHandler *inputhandler_surface = new InputHandler(graph);
-
     SurfaceGraph *surfaceGraph = new SurfaceGraph(graph, inputhandler_surface);
-
     DataController *dataController = new DataController(surfaceGraph);
-
     Simulation *simulation = new Simulation(dataController);
 
     QSize screenSize = graph->screen()->size();
-    container_surface->setMinimumSize(QSize(screenSize.width() / 2, screenSize.height() / 1.6));
+
+    container_surface->setMinimumSize(QSize(screenSize.width() * 0.8, screenSize.height()));
     container_surface->setMaximumSize(screenSize);
+    container_surface->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    container_surface->setFocusPolicy(Qt::StrongFocus);
 
     QWidget *widget = new QWidget;
-    widget->setWindowTitle(QStringLiteral("Surface example"));
+    widget->setWindowTitle(QStringLiteral("QT Vape"));
+
     QHBoxLayout *hLayout = new QHBoxLayout(widget);
     hLayout->setSpacing(0);
     hLayout->setMargin(0);
 
     QQuickStyle::setStyle("Material");
     QQuickWidget *m_quickWidget = new QQuickWidget;
-    m_quickWidget->resize(400, 800);
-    m_quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView );
+    m_quickWidget->setMinimumSize(QSize(screenSize.width() * 0.2, screenSize.height()));
+    m_quickWidget->setMaximumSize(screenSize);
+    m_quickWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_quickWidget->setFocusPolicy(Qt::StrongFocus);
+    m_quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
 
     m_quickWidget->setSource(QUrl("qrc:/ControlPanel.qml"));
     QObject *item = m_quickWidget->rootObject();
 
     hLayout->addWidget(container_surface, 1);
-    hLayout->addWidget(m_quickWidget, 0);
+    hLayout->addWidget(m_quickWidget);
 
     ContainerManager *container_m = new ContainerManager(container_surface, simulation, surfaceGraph);
 
-    graph->show();
 
     // SIMULATION
     QObject::connect(inputhandler_surface, &InputHandler::dragged,
@@ -114,8 +116,10 @@ int main(int argc, char **argv)
     QObject::connect(item, SIGNAL(enableFlatShading(bool)),
                      surfaceGraph, SLOT(enableFlatShading(bool)));
 
+//    widget->showFullScreen();
 
-    widget->show();
+    graph->show();
+    widget->showMaximized();
 
 
     return app.exec();
