@@ -76,7 +76,11 @@ Page {
                         value: 0.5
                         to: 10.0
                         onValueChanged: {
-                            root.heightGlyphs(value)
+                            if(modeItemRB.checked){
+                                root.heightGlyphs(value)
+                            }else{
+                                scales.value = 0.5;
+                            }
                         }
                     }
                 }
@@ -347,25 +351,11 @@ Page {
             Text {
                 height: 20
                 color: "#ffffff"
-                text: qsTr("Uniform Grid")
+                text: qsTr("Grid")
                 anchors.topMargin: 15
                 anchors.top: parent.top
                 verticalAlignment: Text.AlignTop
                 font.pixelSize: 13
-            }
-
-            SwitchDelegate {
-                id: switchDelegate
-                width: column.width - 2 * column.padding - 20
-                font.pixelSize: 12
-                onToggled: {
-                    if(modeItemRB.checked){
-                        root.setGridType("uniform")
-                        switchDelegate1.checked = false
-                    }else{
-                        switchDelegate.checked = false
-                    }
-                }
             }
         }
 
@@ -376,43 +366,42 @@ Page {
                 ColumnLayout {
                     anchors.fill: parent
 
-                }
-        }
+                    Row {
+                        SwitchDelegate {
+                            width: column.width - 2 * column.padding - 20
+                            text: qsTr("Uniform Grid")
+                            id: switchDelegate
+                            font.pixelSize: 12
+                            onToggled: {
+                                if(modeItemRB.checked){
+                                    root.setGridType("uniform")
+                                    switchDelegate1.checked = false
+                                }else{
+                                    switchDelegate.checked = false
+                                }
+                            }
 
-        Row {
-            width: column.width - 2 * column.padding
-            spacing: 15
-            Text {
-                height: 20
-                color: "#ffffff"
-                text: qsTr("Random Grid")
-                anchors.topMargin: 15
-                anchors.top: parent.top
-                verticalAlignment: Text.AlignTop
-                font.pixelSize: 13
-            }
-
-            SwitchDelegate {
-                id: switchDelegate1
-                width: column.width - 2 * column.padding - 20
-                font.pixelSize: 12
-                onToggled: {
-                    if(modeItemRB.checked){
-                        root.setGridType("random")
-                        switchDelegate.checked = false
-                    }else{
-                        switchDelegate1.checked = false
+                        }
                     }
-                }
-            }
-        }
 
-        Frame {
-                width: column.width - 2 * column.padding
-                spacing: 15
+                    Row {
+                        SwitchDelegate {
+                            width: column.width - 2 * column.padding - 20
+                            text: qsTr("Random Grid")
+                            id: switchDelegate1
+                            font.pixelSize: 12
+                            onToggled: {
+                                if(modeItemRB.checked){
+                                    root.setGridType("random")
+                                    switchDelegate.checked = false
+                                }else{
+                                    switchDelegate1.checked = false
+                                }
+                            }
 
-                ColumnLayout {
-                    anchors.fill: parent
+                        }
+                    }
+
                     Row {
                         width: column.width - 2 * column.padding
                         spacing: 15

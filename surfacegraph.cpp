@@ -69,7 +69,7 @@ void SurfaceGraph::generateData()
 
 
             QCustom3DItem *item = new QCustom3DItem(":/arrow3.obj",
-                                                    QVector3D((1.0f * i), 0.5f, (1.0f * j)),
+                                                    QVector3D((1.0f * i), glyphHeight, (1.0f * j)),
                                                     QVector3D(0.01f, 0.01f, 0.01f),
                                                     yRotation,
                                                     color);
@@ -125,7 +125,7 @@ void SurfaceGraph::generateRandomGridData(int size){
         QQuaternion yRotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 0.0f, 0);
 
         QCustom3DItem *item = new QCustom3DItem(":/arrow3.obj",
-                                                QVector3D(rX, 0.5f, rY),
+                                                QVector3D(rX, glyphHeight, rY),
                                                 QVector3D(0.01f, 0.01f, 0.01f),
                                                 yRotation,
                                                 color);
@@ -136,8 +136,9 @@ void SurfaceGraph::generateRandomGridData(int size){
 }
 
 void SurfaceGraph::setHeightArrows(double height){
+    glyphHeight = height;
     for(int i=0; i < m_arrows.size(); i++){
-        m_arrows.at(i)->setPosition(QVector3D(m_arrows.at(i)->position().x(), height, m_arrows.at(i)->position().z()));
+        m_arrows.at(i)->setPosition(QVector3D(m_arrows.at(i)->position().x(), glyphHeight, m_arrows.at(i)->position().z()));
     }
 }
 
