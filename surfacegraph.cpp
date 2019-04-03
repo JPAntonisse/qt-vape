@@ -68,8 +68,8 @@ void SurfaceGraph::generateData()
             QQuaternion yRotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 0.0f, 0);
 
 
-            QCustom3DItem *item = new QCustom3DItem(":/arrow3.obj",
-                                                    QVector3D((1.0f * i), 0.1f, (1.0f * j)),
+            QCustom3DItem *item = new QCustom3DItem(":/arrow4.obj",
+                                                    QVector3D((1.0f * i), 0.5f, (1.0f * j)),
                                                     QVector3D(0.01f, 0.01f, 0.01f),
                                                     yRotation,
                                                     color);
@@ -78,7 +78,7 @@ void SurfaceGraph::generateData()
             m_graph->addCustomItem(item);
         }
     }
-
+    qDebug() << "amount of Arrows: " << m_graph->customItems().size();
 
 }
 
@@ -87,7 +87,6 @@ void SurfaceGraph::clearData(){
         m_graph->releaseCustomItem(m_arrows.at(i));
     }
     m_arrows.clear();
-    qDebug() << m_graph->customItems().size();
 }
 
 //void SurfaceGraph::resetGrid(QString type){
@@ -125,8 +124,8 @@ void SurfaceGraph::generateRandomGridData(int size){
 
         QQuaternion yRotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 0.0f, 0);
 
-        QCustom3DItem *item = new QCustom3DItem(":/arrow3.obj",
-                                                QVector3D(rX, 0.1f, rY),
+        QCustom3DItem *item = new QCustom3DItem(":/arrow4.obj",
+                                                QVector3D(rX, 0.5f, rY),
                                                 QVector3D(0.01f, 0.01f, 0.01f),
                                                 yRotation,
                                                 color);
@@ -134,7 +133,12 @@ void SurfaceGraph::generateRandomGridData(int size){
         m_arrows.append(item);
         m_graph->addCustomItem(item);
     }
+}
 
+void SurfaceGraph::setHeightArrows(double height){
+    for(int i=0; i < m_arrows.size(); i++){
+        m_arrows.at(i)->setPosition(QVector3D(m_arrows.at(i)->position().x(), height, m_arrows.at(i)->position().z()));
+    }
 }
 
 

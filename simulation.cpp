@@ -103,14 +103,20 @@ void Simulation::setColorMap(QString type){
 void Simulation::visualizeQScatter(){
     QVector<QCustom3DItem*> m_arrows = dataController->getSurfaceGraph()->getArrows();
     int i, j, idx;
-    for (j = 0; j < m_gridSize; j++) {
+    if(uniformGrid){
+        for (j = 0; j < m_gridSize; j++) {
 
-        for (i = 0; i < m_gridSize; i++) {
+            for (i = 0; i < m_gridSize; i++) {
 
-            idx = (i * m_gridSize) + j;
-            QQuaternion rotation = QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, getRotationArrow(idx, m_arrows.at(idx)));
-            m_arrows.at(idx)->setRotation(rotation);
-
+                idx = (i * m_gridSize) + j;
+                QQuaternion rotation = QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, getRotationArrow(idx, m_arrows.at(idx)));
+                m_arrows.at(idx)->setRotation(rotation);
+            }
+        }
+    }else{
+        for (j = 0; j < m_arrows.size(); j++) {
+                QQuaternion rotation = QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, getRotationArrow(j, m_arrows.at(j)));
+                m_arrows.at(j)->setRotation(rotation);
         }
     }
 

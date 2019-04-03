@@ -28,12 +28,12 @@ void ContainerManager::showSurface(bool set)
     if(!set){
         m_simulation->setVisualizationType(true);
         m_surfaceGraph->clearData();
-        m_simulation->setDataSet(QString('velocity'));
+        m_simulation->setDataSet(QString("velocity"));
     }else{
         m_simulation->setGridType(true);
         m_surfaceGraph->generateData();
         m_simulation->setVisualizationType(false);
-        m_simulation->setDataSet(QString('velocity'));
+        m_simulation->setDataSet(QString("velocity"));
     }
 
 }
@@ -41,13 +41,13 @@ void ContainerManager::showSurface(bool set)
 void ContainerManager::setGridType(QString type)
 {
 
-    if(type == "uniform"){
+    if(type == "uniform" && !m_simulation->isUniformGrid()){
         qDebug() << "Uniform";
         m_simulation->setUniformGrid(true);
         m_surfaceGraph->clearData();
         m_surfaceGraph->generateData();
 
-    }else if(type == "random"){
+    }else if(type == "random" && m_simulation->isUniformGrid()){
         qDebug() << "Random";
         m_simulation->setUniformGrid(false);
         m_surfaceGraph->clearData();
@@ -61,7 +61,9 @@ void ContainerManager::setRandomGridAmountOfArrows(int amount){
     m_surfaceGraph->generateRandomGridData(amount);
 }
 
-void ContainerManager::addRandomGridArrows(int amount){
+void ContainerManager::setRandomArrows(double amount){
+    qDebug() << "Add Random arrows: " << amount;
+    m_surfaceGraph->clearData();
     m_surfaceGraph->generateRandomGridData(amount);
 }
 
@@ -75,6 +77,9 @@ void ContainerManager::setGreenToRedGradient(){
     m_simulation->setColorMap(QString('greenred'));
 }
 
+void ContainerManager::heightGlyphs(double height){
+    m_surfaceGraph->setHeightArrows(height);
+}
 
 void ContainerManager::setGlypColor(bool value){
     qDebug() << " value: " << value;

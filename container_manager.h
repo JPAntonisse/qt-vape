@@ -24,7 +24,8 @@ class ContainerManager : public QObject
         void showSurface(bool set);
         void setGridType(QString type);
         void setRandomGridAmountOfArrows(int amount);
-        void addRandomGridArrows(int amount);
+        void heightGlyphs(double height);
+        void setRandomArrows(double amount);
         void setBlackToYellowGradient();
         void setGreenToRedGradient();
         void setGlypColor(bool value);

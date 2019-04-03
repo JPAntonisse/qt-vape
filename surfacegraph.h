@@ -48,6 +48,7 @@ class SurfaceGraph : public QObject
         void generateData();
         void generateRandomGridData(int size);
         QVector<QCustom3DItem*> getArrows();
+        void setHeightArrows(double height);
     public Q_SLOTS:
         void hueRotation(double);
         void scaleGraph(double);
