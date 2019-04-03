@@ -32,9 +32,9 @@ SurfaceGraph::SurfaceGraph(Q3DSurface *surface, InputHandler *inputhandler):
 
     m_graph->setShadowQuality(QAbstract3DGraph::ShadowQualityNone);
     m_graph->activeTheme()->setType(Q3DTheme::ThemeEbony);
-    m_graph->activeTheme()->setGridEnabled(false);
+//    m_graph->activeTheme()->setGridEnabled(false);
     m_graph->activeTheme()->setBackgroundEnabled(false);
-    m_graph->activeTheme()->setLabelTextColor("transparent");
+    m_graph->activeTheme()->setLabelTextColor("white");
 
     m_simSinProxy = new QSurfaceDataProxy();
     m_simSinSeries = new QSurface3DSeries(m_simSinProxy);
@@ -145,18 +145,18 @@ QVector<QCustom3DItem*> SurfaceGraph::getArrows(){
 void SurfaceGraph::enableSimulationModel(bool enable)
 {
     m_simSinSeries->setDrawMode(QSurface3DSeries::DrawSurface);
-    m_simSinSeries->setFlatShadingEnabled(false);
-    m_simSinSeries->setItemLabelVisible(false);
+    m_simSinSeries->setFlatShadingEnabled(true);
+    m_simSinSeries->setItemLabelVisible(true);
 
 
     m_graph->axisX()->setRange(-1.0f, 101.0f);
-    m_graph->axisY()->setRange(0.0f, 0.2f);
-    m_graph->setAspectRatio(20);
+    m_graph->axisY()->setRange(0.0f, 10.0f);
+    m_graph->setAspectRatio(scale_graph);
     m_graph->axisZ()->setRange(-1.0f, 101.0f);
 
     m_graph->addSeries(m_simSinSeries);
 
-    m_graph->axisX()->setLabelFormat("%.2f");
+    m_graph->axisX()->setLabelFormat("%.0f");
     m_graph->axisZ()->setLabelFormat("%.2f");
 
 //        m_graph->axisX()->setRange(0.0f, 10.0f);
@@ -262,15 +262,26 @@ void SurfaceGraph::setAxisZRange(float min, float max)
     m_graph->axisZ()->setRange(min, max);
 }
 
-
+float SurfaceGraph::calcHue(float val)
+{
+    if (val + hue_rotation < 0)
+        return 0;
+    else {
+        return val + hue_rotation;
+    }
+}
 
 void SurfaceGraph::setBlackToYellowGradient()
 {
     QLinearGradient gr;
-    gr.setColorAt(0.0, Qt::black);
-    gr.setColorAt(0.33, Qt::blue);
-    gr.setColorAt(0.67, Qt::red);
-    gr.setColorAt(1.0, Qt::yellow);
+    gr.setColorAt(calcHue(-0.99), Qt::yellow);
+    gr.setColorAt(calcHue(-0.67), Qt::red);
+    gr.setColorAt(calcHue(-0.33), Qt::blue);
+    gr.setColorAt(0.0 + hue_rotation, Qt::black);
+    gr.setColorAt(0.33 + hue_rotation, Qt::blue);
+    gr.setColorAt(0.67 + hue_rotation, Qt::red);
+    gr.setColorAt(0.99 + hue_rotation, Qt::yellow);
+    active_gradient = GradientState::StateBlackToYellow;
 
     m_graph->seriesList().at(0)->setBaseGradient(gr);
     m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
@@ -279,12 +290,39 @@ void SurfaceGraph::setBlackToYellowGradient()
 void SurfaceGraph::setGreenToRedGradient()
 {
     QLinearGradient gr;
-    gr.setColorAt(0.0, Qt::darkGreen);
-    gr.setColorAt(0.5, Qt::yellow);
-    gr.setColorAt(0.8, Qt::red);
-    gr.setColorAt(1.0, Qt::darkRed);
+    gr.setColorAt(calcHue(-0.99), Qt::darkRed);
+    gr.setColorAt(calcHue(-0.8), Qt::red);
+    gr.setColorAt(calcHue(-0.5), Qt::yellow);
+    gr.setColorAt(0.0 + hue_rotation, Qt::darkGreen);
+    gr.setColorAt(0.5 + hue_rotation, Qt::yellow);
+    gr.setColorAt(0.8 + hue_rotation, Qt::red);
+    gr.setColorAt(0.99 + hue_rotation, Qt::darkRed);
+    active_gradient = GradientState::StateGreenToRed;
 
     m_graph->seriesList().at(0)->setBaseGradient(gr);
     m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
 }
+
+void SurfaceGraph::updateGradient()
+{
+    if(active_gradient == GradientState::StateGreenToRed) {
+        setGreenToRedGradient();
+    } else if(active_gradient == GradientState::StateBlackToYellow) {
+        setBlackToYellowGradient();
+    }
+}
+
+void SurfaceGraph::hueRotation(double val)
+{
+    hue_rotation = static_cast<float>(val) ;
+    updateGradient();
+}
+
+void SurfaceGraph::scaleGraph(double val)
+{
+    //We want values between 2 and 20
+    scale_graph = 20 - (static_cast<float>(val) * 18);
+    m_graph->setAspectRatio(scale_graph);
+}
+
 

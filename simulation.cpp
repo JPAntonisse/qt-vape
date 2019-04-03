@@ -168,7 +168,7 @@ fftw_real Simulation::getDataPoint(int idx)
     if(visualize_data == Simulation::DENSITY) {
         return rho[idx];
     } else if (visualize_data == Simulation::VELOCITY) {
-        return sqrt(pow(vx[idx], 2) + pow(vy[idx], 2));
+        return sqrt(pow(vx[idx], 2) + pow(vy[idx], 2)) * 20;
     } else if (visualize_data == Simulation::FORCE) {
         return sqrt(pow(fx[idx], 2) + pow(fy[idx], 2));
     }
@@ -400,7 +400,7 @@ void Simulation::drag(int X, int Y, float dx, float dy)
         for(y = -around; y < around; y++) {
             int xRC = rotateClamp(x + X, 0, m_gridSize);
             int yRC = rotateClamp(y + Y, 0, m_gridSize);
-            rho[xRC * m_gridSize + yRC] = 0.3f - 0.3f * sqrt(pow(abs(x), 2) + pow(abs(y), 2))/pow(around, 2);
+            rho[xRC * m_gridSize + yRC] = 10.0f - 10.0f * sqrt(pow(abs(x), 2) + pow(abs(y), 2))/pow(around, 2);
         }
     }
 }

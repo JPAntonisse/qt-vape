@@ -13,8 +13,11 @@ Rectangle {
     signal drawWireFrame(bool checked)
     signal setDataSet(string dataSet)
     signal showSurface(bool show)
+    signal hueRotation(double value)
+    signal scaleGraph(double value)
     signal setGridType(string type)
     signal setGlypColor(bool show)
+
 
     Material.theme: Material.Dark
     Material.accent: Material.Blue

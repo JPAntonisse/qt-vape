@@ -92,6 +92,13 @@ int main(int argc, char **argv)
     QObject::connect(item, SIGNAL(setGlypColor(bool)),
                      container_m, SLOT(setGlypColor(bool)));
 
+    QObject::connect(item, SIGNAL(hueRotation(double)),
+                     surfaceGraph, SLOT(hueRotation(double)));
+
+    QObject::connect(item, SIGNAL(scaleGraph(double)),
+                     surfaceGraph, SLOT(scaleGraph(double)));
+
+
     widget->show();
 
 

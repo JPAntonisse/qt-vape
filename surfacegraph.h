@@ -14,6 +14,10 @@ using namespace QtDataVisualization;
 class SurfaceGraph : public QObject
 {
     Q_OBJECT
+    enum GradientState {
+        StateGreenToRed = 0,
+        StateBlackToYellow = 1,
+    };
     public:
         explicit SurfaceGraph(Q3DSurface *surface, InputHandler *inputhandler);
         ~SurfaceGraph();
@@ -45,6 +49,8 @@ class SurfaceGraph : public QObject
         void generateRandomGridData(int size);
         QVector<QCustom3DItem*> getArrows();
     public Q_SLOTS:
+        void hueRotation(double);
+        void scaleGraph(double);
         void drawWireFrame(bool);
         void setBlackToYellowGradient();
         void setGreenToRedGradient();
@@ -73,9 +79,15 @@ class SurfaceGraph : public QObject
         int m_heightMapWidth;
         int m_heightMapHeight;
 
+        float hue_rotation = 0;
+        int active_gradient;
+        int scale_graph = 20;
+
         void setAxisXRange(float min, float max);
         void setAxisZRange(float min, float max);
         void fillSqrtSinProxy();
+        void updateGradient();
+        float calcHue(float val);
 };
 
 #endif
