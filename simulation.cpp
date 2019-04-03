@@ -60,6 +60,9 @@ void Simulation::update()
     }
 }
 
+int Simulation::getGridSize(){
+    return m_gridSize;
+}
 
 void Simulation::setVisualizationType(bool set){
     visualizationType = set;
@@ -84,6 +87,10 @@ void Simulation::visualizeQSurface()
     //m_surface->resetData(dataArray);
 }
 
+void Simulation::setColorMap(QString type){
+    colorMapType = type;
+}
+
 void Simulation::visualizeQScatter(){
     QVector<QCustom3DItem*> m_arrows = dataController->getSurfaceGraph()->getArrows();
     int i, j, idx;
@@ -93,8 +100,8 @@ void Simulation::visualizeQScatter(){
 
             idx = (i * m_gridSize) + j;
             QQuaternion rotation = QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, getRotationArrow(idx, m_arrows.at(idx)));
-
             m_arrows.at(idx)->setRotation(rotation);
+
         }
     }
 
@@ -107,13 +114,36 @@ void Simulation::setGridType(bool type){
 
 
 void Simulation::setArrowSize(fftw_real force, QCustom3DItem* arrow){
-    if(force > 0.04){
+    double realForce = abs(force);
+    if(realForce > 0.04){
         arrow->setScaling(QVector3D(0.04f, 0.04f, 0.04f));
-    }else if (force < 0.02){
+    }else if (realForce < 0.02){
         arrow->setScaling(QVector3D(0.02f, 0.02f, 0.02f));
     }else{
         arrow->setScaling(QVector3D(0.03f, 0.03f, 0.03f));
     }
+}
+
+void Simulation::setArrowColor(fftw_real force, QCustom3DItem* arrow){
+    QImage color = QImage(1, 1, QImage::Format_A2BGR30_Premultiplied);
+    QColor colord;
+    double realForce = abs(force);
+    if(colorMapType == 'greenred'){
+        if(realForce > 0.04){
+            colord = QColor(255, 0, 0);
+        }else if (realForce < 0.01){
+            //int a = floor((255/0.04)*(realForce-0.01));
+            //qDebug() << a;
+            //
+            colord = QColor(124, 124, 0);
+        }else{
+            colord = QColor(0, 255, 0);
+        }
+    }
+    color.fill(colord);
+
+    arrow->setTextureImage(color);
+
 }
 
 bool Simulation::isUniformGrid(){
@@ -143,17 +173,28 @@ float Simulation::getRotationArrow(int idx, QCustom3DItem* arrow){
         ix = interpolate(arrow, true);
         iy = interpolate(arrow, false);
         setArrowSize(ix + iy, arrow);
+        if(colorMapActive){
+            setArrowColor(ix + iy, arrow);
+        }
         return atan2(-iy, ix)*(180.0/pi);
     }else{
         if (visualize_data == Simulation::VELOCITY) {
             setArrowSize(vy[idx] + vx[idx], arrow);
+            if(colorMapActive){
+                setArrowColor(vy[idx] + vx[idx], arrow);
+            }
             return atan2(-vy[idx], vx[idx])*(180.0/pi);
         } else if (visualize_data == Simulation::FORCE) {
             setArrowSize(fy[idx] + fx[idx], arrow);
+            if(colorMapActive){
+                setArrowColor(fy[idx] + fx[idx], arrow);
+            }
             return atan2(-fy[idx], fx[idx])*(180.0/pi);
         }
     }
 }
+
+
 
 double Simulation::interpolate(QCustom3DItem* arrow, bool direction){
     int x = floor(arrow->position().x());
@@ -164,15 +205,23 @@ double Simulation::interpolate(QCustom3DItem* arrow, bool direction){
     double sum = 0;
     if (visualize_data == Simulation::VELOCITY) {
         if(direction){
-            sum =  ((zdiff * vx[(x * m_gridSize) + z]) + ((1- zdiff) * vx[(x * m_gridSize) + z+1]) + (xdiff * vx[((x+1) * m_gridSize) + z]) + ((1-xdiff) * vx[((x+1) * m_gridSize) + z+1])) / 4;
+            double E = (vx[(x * m_gridSize) + z] + xdiff * (vx[((x+1) * m_gridSize) + z] - vx[(x * m_gridSize) + z]));
+            double F = (vx[(x * m_gridSize) + z+1] + xdiff * (vx[((x+1) * m_gridSize) + z+1] - vx[(x * m_gridSize) + z+1]));
+            sum =  E + zdiff * (F-E);
         }else{
-            sum =  ((zdiff * vy[(x * m_gridSize) + z]) + ((1- zdiff) * vy[(x * m_gridSize) + z+1]) + (xdiff * vy[((x+1) * m_gridSize) + z]) + ((1-xdiff) * vy[((x+1) * m_gridSize) + z+1])) / 4;
+            double E = (vy[(x * m_gridSize) + z] + xdiff * (vy[((x+1) * m_gridSize) + z] - vy[(x * m_gridSize) + z]));
+            double F = (vy[(x * m_gridSize) + z+1] + xdiff * (vy[((x+1) * m_gridSize) + z+1] - vy[(x * m_gridSize) + z+1]));
+            sum =  E + zdiff * (F-E);
         }
     }else if (visualize_data == Simulation::FORCE) {
         if(direction){
-            sum =  ((zdiff * fx[(x * m_gridSize) + z]) + ((1- zdiff) * fx[(x * m_gridSize) + z+1]) + (xdiff * fx[((x+1) * m_gridSize) + z]) + ((1-xdiff) * fx[((x+1) * m_gridSize) + z+1])) / 4;
+            double E = (fx[(x * m_gridSize) + z] + xdiff * (fx[((x+1) * m_gridSize) + z] - fx[(x * m_gridSize) + z]));
+            double F = (fx[(x * m_gridSize) + z+1] + xdiff * (fx[((x+1) * m_gridSize) + z+1] - fx[(x * m_gridSize) + z+1]));
+            sum =  E + zdiff * (F-E);
         }else{
-            sum =  ((zdiff * fy[(x * m_gridSize) + z]) + ((1- zdiff) * fy[(x * m_gridSize) + z+1]) + (xdiff * fy[((x+1) * m_gridSize) + z]) + ((1-xdiff) * fy[((x+1) * m_gridSize) + z+1])) / 4;
+            double E = (fy[(x * m_gridSize) + z] + xdiff * (fy[((x+1) * m_gridSize) + z] - fy[(x * m_gridSize) + z]));
+            double F = (fy[(x * m_gridSize) + z+1] + xdiff * (fy[((x+1) * m_gridSize) + z+1] - fy[(x * m_gridSize) + z+1]));
+            sum =  E + zdiff * (F-E);
         }
     }
     return sum;

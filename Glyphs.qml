@@ -13,13 +13,14 @@ Page {
         spacing: 15
         padding: 15
 
-
-        SwitchDelegate {
-            id: modeItemRB
-            width: column.width - 2 * column.padding
-            text: qsTr("Enable Glyphs")
-            font.pixelSize: 12
-            onToggled: root.showSurface(checked)
+        Row {
+            SwitchDelegate {
+                id: modeItemRB
+                width: column.width - 2 * column.padding
+                text: qsTr("Enable Glyphs")
+                font.pixelSize: 12
+                onToggled: root.showSurface(checked)
+            }
         }
 
         Row {
@@ -28,16 +29,10 @@ Page {
             spacing: 15
 
             RadioDelegate {
-                id: radioDelegate
-                text: qsTr("Density")
-                checked: true
-                onClicked: root.setDataSet("density")
-            }
-
-            RadioDelegate {
                 id: radioDelegate1
                 text: qsTr("Velocity")
                 onClicked: root.setDataSet("velocity")
+                checked: true
             }
 
             RadioDelegate {
@@ -48,31 +43,23 @@ Page {
 
         }
 
-
-
         Row {
-            id: row2
             width: column.width - 2 * column.padding
             spacing: 15
 
             RadioDelegate {
-                id: radioUniformGrid
+                id: radioDelegate3
                 text: qsTr("Uniform Grid")
-                checked: true
                 onClicked: root.setGridType("uniform")
+                checked: true
             }
 
             RadioDelegate {
-                id: radioRandomGrid
+                id: radioDelegate4
                 text: qsTr("Random Grid")
-                onClicked: root.setGridType("random")
+                    onClicked: root.setGridType("random")
             }
 
-        }
-
-        Button {
-            text: qsTr("Click me")
-            //onClicked: root.showSurface(true)
         }
 
     }
