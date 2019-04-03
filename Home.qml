@@ -34,31 +34,37 @@ Page {
             ColumnLayout {
                 anchors.fill: parent
 
-                Row {
-                    id: row
+                Flow {
                     width: column.width - 2 * column.padding
                     spacing: 15
+                    anchors.fill: parent
 
                     RadioDelegate {
-                        id: radioDelegate
                         text: qsTr("Density")
                         checked: true
                         onClicked: root.setDataSet("density")
+                        width: parent.width / 2 - 7.5
                     }
 
                     RadioDelegate {
-                        id: radioDelegate1
                         text: qsTr("Velocity")
                         onClicked: root.setDataSet("velocity")
+                        width: parent.width / 2 - 7.5
                     }
 
                     RadioDelegate {
-                        id: radioDelegate2
                         text: qsTr("Force")
                         onClicked: root.setDataSet("force")
+                        width: parent.width / 2 - 7.5
+                    }
+                    RadioDelegate {
+                        text: qsTr("Divergence")
+                        onClicked: root.setDataSet("divergence")
+                        width: parent.width / 2 - 7.5
                     }
 
                 }
+
 
                 Row {
                     id: row1
@@ -79,7 +85,6 @@ Page {
                         id: scales
                         stepSize: 0.01
                         value: 0.2
-
                         onValueChanged: {
                             root.scaleGraph(value)
                         }
