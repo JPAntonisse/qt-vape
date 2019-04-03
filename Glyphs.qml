@@ -43,6 +43,45 @@ Page {
 
         }
 
+        Rectangle {
+            width: column.width - 2 * column.padding
+            height: 20
+            color: "#ffffff"
+            border.width: 0
+            border.color: "black"
+            gradient: Gradient {
+                orientation: Gradient.Horizontal
+                GradientStop { position: 0.0; color: "green" }
+                GradientStop { position: 1.0; color: "darkgreen" }
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    root.setGlypColor(false)
+                }
+            }
+        }
+
+        Rectangle {
+            width: column.width - 2 * column.padding
+            height: 20
+            color: "#ffffff"
+            border.width: 0
+            border.color: "black"
+            gradient: Gradient {
+                orientation: Gradient.Horizontal
+                GradientStop { position: 0.0; color: "green" }
+                GradientStop { position: 0.5; color: "yellow" }
+                GradientStop { position: 1.0; color: "red" }
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    root.setGlypColor(true)
+                }
+            }
+        }
+
         Row {
             width: column.width - 2 * column.padding
             spacing: 15
@@ -57,7 +96,7 @@ Page {
             RadioDelegate {
                 id: radioDelegate4
                 text: qsTr("Random Grid")
-                    onClicked: root.setGridType("random")
+                onClicked: root.setGridType("random")
             }
 
         }

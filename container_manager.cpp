@@ -28,10 +28,12 @@ void ContainerManager::showSurface(bool set)
     if(!set){
         m_simulation->setVisualizationType(true);
         m_surfaceGraph->clearData();
+        m_simulation->setDataSet(QString('velocity'));
     }else{
         m_simulation->setGridType(true);
         m_surfaceGraph->generateData();
         m_simulation->setVisualizationType(false);
+        m_simulation->setDataSet(QString('velocity'));
     }
 
 }
@@ -49,7 +51,7 @@ void ContainerManager::setGridType(QString type)
         qDebug() << "Random";
         m_simulation->setUniformGrid(false);
         m_surfaceGraph->clearData();
-        m_surfaceGraph->generateRandomGridData(m_simulation->getGridSize()^2);
+        m_surfaceGraph->generateRandomGridData(pow(m_simulation->getGridSize(), 2));
     }
 
 }
@@ -71,6 +73,17 @@ void ContainerManager::setBlackToYellowGradient(){
 void ContainerManager::setGreenToRedGradient(){
     m_surfaceGraph->setGreenToRedGradient();
     m_simulation->setColorMap(QString('greenred'));
+}
+
+
+void ContainerManager::setGlypColor(bool value){
+    qDebug() << " value: " << value;
+    m_simulation->setGlyphColorActive(value);
+    m_simulation->setColorMap(QString('greenred'));
+
+    if(value == false){
+        m_simulation->recolorToStandard();
+    }
 }
 
 

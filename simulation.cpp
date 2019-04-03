@@ -146,6 +146,15 @@ void Simulation::setArrowColor(fftw_real force, QCustom3DItem* arrow){
 
 }
 
+void Simulation::recolorToStandard(){
+    QVector<QCustom3DItem*> m_arrows = dataController->getSurfaceGraph()->getArrows();
+    QImage color = QImage(1, 1, QImage::Format_A2BGR30_Premultiplied);
+    color.fill(Qt::green);
+    for (int j = 0; j < m_arrows.size(); j++) {
+            m_arrows.at(j)->setTextureImage(color);
+    }
+}
+
 bool Simulation::isUniformGrid(){
     return uniformGrid;
 }
@@ -194,7 +203,9 @@ float Simulation::getRotationArrow(int idx, QCustom3DItem* arrow){
     }
 }
 
-
+void Simulation::setGlyphColorActive(bool set){
+    colorMapActive = set;
+}
 
 double Simulation::interpolate(QCustom3DItem* arrow, bool direction){
     int x = floor(arrow->position().x());

@@ -14,6 +14,7 @@ Rectangle {
     signal setDataSet(string dataSet)
     signal showSurface(bool show)
     signal setGridType(string type)
+    signal setGlypColor(bool show)
 
     Material.theme: Material.Dark
     Material.accent: Material.Blue
