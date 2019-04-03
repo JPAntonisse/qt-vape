@@ -84,6 +84,7 @@ class SurfaceGraph : public QObject
         float hue_rotation = 0;
         int active_gradient;
         int scale_graph = 20;
+        double glyphHeight = 0.5;
 
         void setAxisXRange(float min, float max);
         void setAxisZRange(float min, float max);
