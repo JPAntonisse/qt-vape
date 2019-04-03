@@ -68,7 +68,7 @@ void SurfaceGraph::generateData()
             QQuaternion yRotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 0.0f, 0);
 
 
-            QCustom3DItem *item = new QCustom3DItem(":/arrow4.obj",
+            QCustom3DItem *item = new QCustom3DItem(":/arrow3.obj",
                                                     QVector3D((1.0f * i), 0.5f, (1.0f * j)),
                                                     QVector3D(0.01f, 0.01f, 0.01f),
                                                     yRotation,
@@ -124,7 +124,7 @@ void SurfaceGraph::generateRandomGridData(int size){
 
         QQuaternion yRotation = QQuaternion::fromAxisAndAngle(0.0f, 0.0f, 0.0f, 0);
 
-        QCustom3DItem *item = new QCustom3DItem(":/arrow4.obj",
+        QCustom3DItem *item = new QCustom3DItem(":/arrow3.obj",
                                                 QVector3D(rX, 0.5f, rY),
                                                 QVector3D(0.01f, 0.01f, 0.01f),
                                                 yRotation,
