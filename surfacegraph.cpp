@@ -195,6 +195,11 @@ void SurfaceGraph::drawWireFrame(bool wire_frame)
     }
 }
 
+void SurfaceGraph::enableFlatShading(bool flat)
+{
+    m_simSinSeries->setFlatShadingEnabled(!flat);
+}
+
 void SurfaceGraph::adjustXMin(int min)
 {
     float minX = m_stepX * float(min) + m_rangeMinX;

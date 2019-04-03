@@ -24,6 +24,7 @@ class Simulation : public QObject
     public slots:
         void update();
         void setDataSet(QString dataSet);
+        void pauseSimulation(bool i_pause);
         void setVisualizationType(bool set);
         void setArrowSize(fftw_real force, QCustom3DItem* arrow);
         void setArrowColor(fftw_real force, QCustom3DItem* arrow);
@@ -46,6 +47,7 @@ class Simulation : public QObject
         DataController *dataController;
         bool visualizationType = true;
         bool uniformGrid = true;
+        bool pause = false;
         fftw_real getDataPoint(int idx);
         QString m_dataset;
 

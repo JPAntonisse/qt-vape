@@ -44,6 +44,9 @@ Simulation::Simulation(DataController *datacontroller) :
 //void Simulation::update(SurfaceGraph *m_surfacegraph)
 void Simulation::update()
 {
+    if (pause)
+        return;
+
     setForces();
 
     solve(m_gridSize, vx, vy, vx0, vy0, visc, dt);
@@ -237,6 +240,12 @@ void Simulation::setDataSet(QString dataSet)
     } else if (dataSet == (QString) "force") {
         visualize_data = Simulation::FORCE;
     }
+}
+
+
+void Simulation::pauseSimulation(bool i_pause)
+{
+    pause = i_pause;
 }
 
 

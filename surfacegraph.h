@@ -52,6 +52,7 @@ class SurfaceGraph : public QObject
         void hueRotation(double);
         void scaleGraph(double);
         void drawWireFrame(bool);
+        void enableFlatShading(bool);
         void setBlackToYellowGradient();
         void setGreenToRedGradient();
         void toggleModeItem() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItem); }

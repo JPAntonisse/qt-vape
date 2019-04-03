@@ -67,10 +67,18 @@ int main(int argc, char **argv)
 
     graph->show();
 
-
+    // SIMULATION
     QObject::connect(inputhandler_surface, &InputHandler::dragged,
                      simulation, &Simulation::drag);
 
+    QObject::connect(item, SIGNAL(setDataSet(QString)),
+                     simulation, SLOT(setDataSet(QString)));
+
+    QObject::connect(item, SIGNAL(pauseSimulation(bool)),
+                     simulation, SLOT(pauseSimulation(bool)));
+
+
+    // CONTAINER
     QObject::connect(item, SIGNAL(setBlackToYellowGradient()),
                      container_m, SLOT(setBlackToYellowGradient()));
 
@@ -80,20 +88,22 @@ int main(int argc, char **argv)
     QObject::connect(item, SIGNAL(setGreenToRedGradient()),
                      container_m, SLOT(setGreenToRedGradient()));
 
-    QObject::connect(item, SIGNAL(drawWireFrame(bool)),
-                     surfaceGraph, SLOT(drawWireFrame(bool)));
-
     QObject::connect(item, SIGNAL(showSurface(bool)),
                     container_m, SLOT(showSurface(bool)));
 
-    QObject::connect(item, SIGNAL(setDataSet(QString)),
-                     simulation, SLOT(setDataSet(QString)));
+
+    // SURFACEGRAPH
+    QObject::connect(item, SIGNAL(drawWireFrame(bool)),
+                     surfaceGraph, SLOT(drawWireFrame(bool)));
 
     QObject::connect(item, SIGNAL(hueRotation(double)),
                      surfaceGraph, SLOT(hueRotation(double)));
 
     QObject::connect(item, SIGNAL(scaleGraph(double)),
                      surfaceGraph, SLOT(scaleGraph(double)));
+
+    QObject::connect(item, SIGNAL(enableFlatShading(bool)),
+                     surfaceGraph, SLOT(enableFlatShading(bool)));
 
 
     widget->show();
