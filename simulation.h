@@ -19,13 +19,18 @@ class Simulation : public QObject
         int DENSITY = 1;
         int VELOCITY = 2;
         int FORCE = 3;
-
         void drag(int X, int Y, float dx, float dy);
 
     public slots:
         void update();
         void setDataSet(QString dataSet);
-
+        void setVisualizationType(bool set);
+        void setArrowSize(fftw_real force, QCustom3DItem* arrow);
+        float getRotationArrow(int idx, QCustom3DItem* arrow);
+        double interpolate(QCustom3DItem* arrow, bool direction);
+        void setGridType(bool type);
+        bool isUniformGrid();
+        void setUniformGrid(bool set);
     private:
         int visualize_data = Simulation::DENSITY;
         float dt = 0.4;                                 //simulation time step
@@ -36,7 +41,8 @@ class Simulation : public QObject
         fftw_real *rho, *rho0;                          //smoke density at the current (rho) and previous (rho0) moment
         rfftwnd_plan plan_rc, plan_cr;                  //simulation domain discretization
         DataController *dataController;
-
+        bool visualizationType = true;
+        bool uniformGrid = true;
         fftw_real getDataPoint(int idx);
         QString m_dataset;
 

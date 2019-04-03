@@ -24,8 +24,8 @@ static const float animationFrames = 30.0f;
 
 ScatterGraph::ScatterGraph(Q3DScatter *scatter, InputHandler *inputhandler)
     : m_graph(scatter),
-      m_fieldLines(200),
-      m_arrowsPerLine(200),
+      m_fieldLines(100),
+      m_arrowsPerLine(100),
       m_magneticField(new QScatter3DSeries),
       m_sun(new QCustom3DItem),
       m_magneticFieldArray(0),
@@ -38,9 +38,15 @@ ScatterGraph::ScatterGraph(Q3DScatter *scatter, InputHandler *inputhandler)
     m_surfaceDataProxy = new QSurfaceDataProxy(m_magneticField);
 
     // Dikte
-    m_magneticField->setItemSize(0.06f);
+    m_magneticField->setItemSize(0.05f);
+
 
     m_magneticField->setMesh(QAbstract3DSeries::MeshUserDefined);
+    /*QCustom3DItem *item = new QCustom3DItem(":/narrowarrow.obj", positionOne,
+                                            QVector3D(0.025f, 0.025f, 0.025f),
+                                            QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, 45.0f),
+                                            color);*/
+
     m_magneticField->setUserDefinedMesh(QStringLiteral(":/narrowarrow.obj"));
     m_magneticField->setBaseColor(QColor(255, 0, 0));
 
@@ -80,6 +86,19 @@ ScatterGraph::ScatterGraph(Q3DScatter *scatter, InputHandler *inputhandler)
     m_graph->axisZ()->setRange(-horizontalRange, horizontalRange);
     m_graph->axisX()->setSegmentCount(int(horizontalRange));
     m_graph->axisZ()->setSegmentCount(int(horizontalRange));
+
+    m_graph->activeTheme()->setType(Q3DTheme::ThemeEbony);
+    m_graph->activeTheme()->setGridEnabled(false);
+    m_graph->activeTheme()->setBackgroundEnabled(false);
+    m_graph->activeTheme()->setLabelTextColor("transparent");
+
+    QLinearGradient gr;
+    gr.setColorAt(0.0, Qt::green);
+    gr.setColorAt(0.5, Qt::blue);
+    gr.setColorAt(1.0, Qt::red);
+
+    m_graph->seriesList().at(0)->setBaseGradient(gr);
+    m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
 
     QObject::connect(&m_rotationTimer, &QTimer::timeout, this,
                      &ScatterGraph::triggerRotation);

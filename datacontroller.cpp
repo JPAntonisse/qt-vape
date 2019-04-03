@@ -1,6 +1,6 @@
 #include "datacontroller.h"
 
-DataController::DataController(SurfaceGraph *surfaceGraph, ScatterGraph *scatterGraph) : surfaceGraph(surfaceGraph), scatterGraph(scatterGraph), container(container)
+DataController::DataController(SurfaceGraph *surfaceGraph) : surfaceGraph(surfaceGraph), container(container)
 {
     //viewType = 's';
 
@@ -10,25 +10,23 @@ DataController::DataController(SurfaceGraph *surfaceGraph, ScatterGraph *scatter
 void DataController::setView(char type){
     // View Type, s = surfaceGraph, d = scatterDataModifier
     viewType = type;
+
+
 }
 
 void DataController::setData(QSurfaceDataArray *dataArray){
-
     //WORK TO DO
     setDataSurfaceGraph(dataArray);
-    //setDataScatterGraph(dataArray);
-
 }
 
 void DataController::setDataSurfaceGraph(QSurfaceDataArray *dataArray){
     surfaceGraph->resetData(dataArray);
 }
 
-void DataController::setDataScatterGraph(QScatterDataArray *dataArray){
-    //scatterGraph->setProperty()
-    //scatterGraph->
-}
-
 ScatterGraph* DataController::getScatterGraph(){
     return scatterGraph;
+}
+
+SurfaceGraph* DataController::getSurfaceGraph(){
+    return surfaceGraph;
 }

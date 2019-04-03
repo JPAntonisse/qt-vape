@@ -103,6 +103,7 @@ void InputHandler::handleDragging()
             yDistance = (xMove * xMulY + yMove * xMulX) / m_speedmodifier;
 
             if(selectedPoint.x() == NULL){
+                qDebug() << "Selected = " << id;
                 emit(dragged(item.x(), item.z(),xDistance, yDistance));
             }
             else emit(dragged(selectedPoint.x(), selectedPoint.y(),xDistance, yDistance));

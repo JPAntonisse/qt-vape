@@ -44,14 +44,18 @@ class SurfaceGraph : public QObject
         void adjustXMax(int max);
         void adjustZMin(int min);
         void adjustZMax(int max);
-
+        void clearData();
+        void generateData();
+        void generateRandomGridData();
     public Q_SLOTS:
         void hueRotation(double);
+        void scaleGraph(double);
         void drawWireFrame(bool);
         void setBlackToYellowGradient();
         void setGreenToRedGradient();
         void toggleModeItem() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItem); }
-
+        QVector<QCustom3DItem*> getArrows();
+        void resetGrid(QString type);
     private:
         Q3DSurface *m_graph;
         QHeightMapSurfaceDataProxy *m_heightMapProxy;
@@ -61,6 +65,8 @@ class SurfaceGraph : public QObject
 
         QSurfaceDataProxy *m_simSinProxy;
         QSurface3DSeries *m_simSinSeries;
+
+        QVector<QCustom3DItem*> m_arrows;
 
 
         QSlider *m_axisMinSliderX;
@@ -76,6 +82,7 @@ class SurfaceGraph : public QObject
 
         float hue_rotation = 0;
         int active_gradient;
+        int scale_graph = 20;
 
         void setAxisXRange(float min, float max);
         void setAxisZRange(float min, float max);

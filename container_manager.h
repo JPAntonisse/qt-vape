@@ -2,6 +2,7 @@
 #define CONTAINER_MANAGER_H
 
 #include "inputhandler.h"
+#include "simulation.h"
 
 #include <QtDataVisualization/Q3DSurface>
 #include <QtDataVisualization/QSurfaceDataProxy>
@@ -15,16 +16,18 @@ class ContainerManager : public QObject
 {
     Q_OBJECT
     public:
-        explicit ContainerManager(QWidget *container_surface, QWidget *container_scatter);
+        explicit ContainerManager(QWidget *container_surface, Simulation *simulation, SurfaceGraph *surfaceGraph);
         ~ContainerManager();
 
 
     public Q_SLOTS:
-        void showSurface(bool);
-
+        void showSurface(bool set);
+        void setGridType(QString type);
     private:
         QWidget *m_surface;
         QWidget *m_scatter;
+        SurfaceGraph *m_surfaceGraph;
+        Simulation *m_simulation;
 
 };
 

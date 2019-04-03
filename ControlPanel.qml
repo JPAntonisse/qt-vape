@@ -14,6 +14,9 @@ Rectangle {
     signal setDataSet(string dataSet)
     signal showSurface(bool show)
     signal hueRotation(double value)
+    signal scaleGraph(double value)
+    signal setGridType(string type)
+
 
     Material.theme: Material.Dark
     Material.accent: Material.Blue
@@ -28,11 +31,9 @@ Rectangle {
         anchors.topMargin: 0
         TabButton {
             text: qsTr("Home")
-            onClicked: root.showSurface(true)
         }
         TabButton {
             text: qsTr("Glyphs")
-            onClicked: root.showSurface(false)
         }
     }
 

@@ -15,11 +15,65 @@ Page {
 
 
         SwitchDelegate {
-            id: switchDelegate
+            id: modeItemRB
             width: column.width - 2 * column.padding
-            text: qsTr("Switch Delegate")
+            text: qsTr("Enable Glyphs")
+            font.pixelSize: 12
+            onToggled: root.showSurface(checked)
         }
 
+        Row {
+            id: row
+            width: column.width - 2 * column.padding
+            spacing: 15
+
+            RadioDelegate {
+                id: radioDelegate
+                text: qsTr("Density")
+                checked: true
+                onClicked: root.setDataSet("density")
+            }
+
+            RadioDelegate {
+                id: radioDelegate1
+                text: qsTr("Velocity")
+                onClicked: root.setDataSet("velocity")
+            }
+
+            RadioDelegate {
+                id: radioDelegate2
+                text: qsTr("Force")
+                onClicked: root.setDataSet("force")
+            }
+
+        }
+
+
+
+        Row {
+            id: row2
+            width: column.width - 2 * column.padding
+            spacing: 15
+
+            RadioDelegate {
+                id: radioUniformGrid
+                text: qsTr("Uniform Grid")
+                checked: true
+                onClicked: root.setGridType("uniform")
+            }
+
+            RadioDelegate {
+                id: radioRandomGrid
+                text: qsTr("Random Grid")
+                onClicked: root.setGridType("random")
+            }
+
+        }
+
+        Button {
+            text: qsTr("Click me")
+            //onClicked: root.showSurface(true)
+        }
 
     }
 
