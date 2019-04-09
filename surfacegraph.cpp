@@ -279,6 +279,28 @@ float SurfaceGraph::calcHue(float val)
     }
 }
 
+void SurfaceGraph::setIsoLineGradient()
+{
+    QLinearGradient gr;
+
+    for (int i = 0; i < 10; i++) {
+        gr.setColorAt(calcHue(0.000 - i * 0.1), Qt::black);
+        gr.setColorAt(calcHue(0.001 - i * 0.1), Qt::white);
+        gr.setColorAt(calcHue(0.002 - i * 0.1), Qt::white);
+        gr.setColorAt(calcHue(0.003 - i * 0.1), Qt::black);
+
+        gr.setColorAt(0.000 + i * 0.1 + hue_rotation, Qt::black);
+        gr.setColorAt(0.001 + i * 0.1 + hue_rotation, Qt::white);
+        gr.setColorAt(0.002 + i * 0.1 + hue_rotation, Qt::white);
+        gr.setColorAt(0.003 + i * 0.1 + hue_rotation, Qt::black);
+    }
+
+    active_gradient = GradientState::StateIsoLine;
+
+    m_graph->seriesList().at(0)->setBaseGradient(gr);
+    m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
+}
+
 void SurfaceGraph::setBlackToYellowGradient()
 {
     QLinearGradient gr;
@@ -317,6 +339,8 @@ void SurfaceGraph::updateGradient()
         setGreenToRedGradient();
     } else if(active_gradient == GradientState::StateBlackToYellow) {
         setBlackToYellowGradient();
+    } else if(active_gradient == GradientState::StateIsoLine) {
+        setIsoLineGradient();
     }
 }
 

@@ -34,25 +34,37 @@ Page {
             ColumnLayout {
                 anchors.fill: parent
 
-                Row {
-                    id: row
+                Flow {
                     width: column.width - 2 * column.padding
                     spacing: 15
+                    anchors.fill: parent
 
                     RadioDelegate {
-                        id: radioDelegate1
-                        text: qsTr("Velocity")
+                        text: qsTr("Density")
                         checked: true
-                        onClicked: root.setDataSet("velocity")
+                        onClicked: root.setDataSet("density")
+                        width: parent.width / 2 - 7.5
                     }
 
                     RadioDelegate {
-                        id: radioDelegate2
+                        text: qsTr("Velocity")
+                        onClicked: root.setDataSet("velocity")
+                        width: parent.width / 2 - 7.5
+                    }
+
+                    RadioDelegate {
                         text: qsTr("Force")
                         onClicked: root.setDataSet("force")
+                        width: parent.width / 2 - 7.5
+                    }
+                    RadioDelegate {
+                        text: qsTr("Divergence")
+                        onClicked: root.setDataSet("divergence")
+                        width: parent.width / 2 - 7.5
                     }
 
                 }
+
 
                 Row {
                     id: row1
@@ -62,7 +74,7 @@ Page {
                         id: slidertext1
                         height: 20
                         color: "#ffffff"
-                        text: qsTr("Glyphs height")
+                        text: qsTr("Graph scaling")
                         anchors.topMargin: 15
                         anchors.top: parent.top
                         verticalAlignment: Text.AlignTop
@@ -71,16 +83,10 @@ Page {
 
                     Slider {
                         id: scales
-                        from: 0.0
-                        stepSize: 0.5
-                        value: 0.5
-                        to: 10.0
+                        stepSize: 0.01
+                        value: 0.2
                         onValueChanged: {
-                            if(modeItemRB.checked){
-                                root.heightGlyphs(value)
-                            }else{
-                                scales.value = 0.5;
-                            }
+                            root.scaleGraph(value)
                         }
                     }
                 }
@@ -106,7 +112,6 @@ Page {
 
             }
         }
-
 
 
         Row {

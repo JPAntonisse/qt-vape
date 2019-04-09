@@ -10,6 +10,7 @@ Rectangle {
 
     signal setBlackToYellowGradient()
     signal setGreenToRedGradient()
+    signal setIsoLineGradient()
     signal drawWireFrame(bool checked)
     signal enableFlatShading(bool checked)
     signal setDataSet(string dataSet)

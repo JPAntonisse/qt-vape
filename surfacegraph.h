@@ -17,6 +17,7 @@ class SurfaceGraph : public QObject
     enum GradientState {
         StateGreenToRed = 0,
         StateBlackToYellow = 1,
+        StateIsoLine = 2,
     };
     public:
         explicit SurfaceGraph(Q3DSurface *surface, InputHandler *inputhandler);
@@ -56,6 +57,8 @@ class SurfaceGraph : public QObject
         void enableFlatShading(bool);
         void setBlackToYellowGradient();
         void setGreenToRedGradient();
+        void setIsoLineGradient();
+
         void toggleModeItem() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItem); }
     private:
         Q3DSurface *m_graph;
