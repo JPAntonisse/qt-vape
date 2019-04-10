@@ -11,6 +11,7 @@ Rectangle {
     signal setBlackToYellowGradient()
     signal setGreenToRedGradient()
     signal setIsoLineGradient()
+    signal setCustomIsoLineGradient();
     signal drawWireFrame(bool checked)
     signal enableFlatShading(bool checked)
     signal setDataSet(string dataSet)
@@ -23,6 +24,10 @@ Rectangle {
     signal setRandomArrows(double value);
     signal heightGlyphs(double value);
     signal setArrowSize(double amount);
+    signal isolineRotation(double value);
+    signal setCustomIsolineMax(double val);
+    signal setCustomIsolineMin(double val);
+    signal setCustomIsolineInterval(int val);
 
     Material.theme: Material.Dark
     Material.accent: Material.Blue

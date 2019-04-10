@@ -40,31 +40,20 @@ Page {
                     anchors.fill: parent
 
                     RadioDelegate {
-                        text: qsTr("Density")
-                        checked: true
-                        onClicked: root.setDataSet("density")
-                        width: parent.width / 2 - 7.5
-                    }
-
-                    RadioDelegate {
+                        id: radioDelegate1
                         text: qsTr("Velocity")
+                        checked: true
                         onClicked: root.setDataSet("velocity")
                         width: parent.width / 2 - 7.5
                     }
 
                     RadioDelegate {
+                        id: radioDelegate2
                         text: qsTr("Force")
                         onClicked: root.setDataSet("force")
                         width: parent.width / 2 - 7.5
                     }
-                    RadioDelegate {
-                        text: qsTr("Divergence")
-                        onClicked: root.setDataSet("divergence")
-                        width: parent.width / 2 - 7.5
-                    }
-
                 }
-
 
                 Row {
                     id: row1
@@ -74,7 +63,7 @@ Page {
                         id: slidertext1
                         height: 20
                         color: "#ffffff"
-                        text: qsTr("Graph scaling")
+                        text: qsTr("Glyphs height")
                         anchors.topMargin: 15
                         anchors.top: parent.top
                         verticalAlignment: Text.AlignTop
@@ -83,10 +72,16 @@ Page {
 
                     Slider {
                         id: scales
-                        stepSize: 0.01
-                        value: 0.2
+                        from: 0.0
+                        stepSize: 0.5
+                        value: 0.5
+                        to: 10.0
                         onValueChanged: {
-                            root.scaleGraph(value)
+                            if(modeItemRB.checked){
+                                root.heightGlyphs(value)
+                            }else{
+                                scales.value = 0.5
+                            }
                         }
                     }
                 }
@@ -112,6 +107,7 @@ Page {
 
             }
         }
+
 
 
         Row {
@@ -144,8 +140,13 @@ Page {
                         text: qsTr("Enable Glyphs")
                         font.pixelSize: 12
                         onToggled: {
-                            switchDelegate.checked = true
                             root.showSurface(checked)
+                            if(modeItemRB.checked){
+                                switchDelegate.checked = true
+                            }else{
+                                switchDelegate.checked = false
+                                switchDelegate1.checked = false
+                            }
                         }
 
                     }

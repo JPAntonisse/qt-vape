@@ -18,6 +18,7 @@ class SurfaceGraph : public QObject
         StateGreenToRed = 0,
         StateBlackToYellow = 1,
         StateIsoLine = 2,
+        CustomIsoLine = 3
     };
     public:
         explicit SurfaceGraph(Q3DSurface *surface, InputHandler *inputhandler);
@@ -52,12 +53,17 @@ class SurfaceGraph : public QObject
         void setHeightArrows(double height);
     public Q_SLOTS:
         void hueRotation(double);
+        void isolineRotation(double);
         void scaleGraph(double);
         void drawWireFrame(bool);
         void enableFlatShading(bool);
         void setBlackToYellowGradient();
         void setGreenToRedGradient();
         void setIsoLineGradient();
+        void setCustomIsolineMax(double val);
+        void setCustomIsolineMin(double val);
+        void setCustomIsolineInterval(int val);
+        void setCustomIsoLineGradient();
 
         void toggleModeItem() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItem); }
     private:
@@ -72,7 +78,9 @@ class SurfaceGraph : public QObject
 
         QVector<QCustom3DItem*> m_arrows;
 
-
+        double customIsolineMin = 0.5;
+        double customIsolineMax = 0.9;
+        int customIsolineInterval = 3;
         QSlider *m_axisMinSliderX;
         QSlider *m_axisMaxSliderX;
         QSlider *m_axisMinSliderZ;
@@ -85,6 +93,7 @@ class SurfaceGraph : public QObject
         int m_heightMapHeight;
 
         float hue_rotation = 0;
+        float isoline_rotation = 0;
         int active_gradient;
         int scale_graph = 20;
         double glyphHeight = 0.5;
@@ -94,6 +103,7 @@ class SurfaceGraph : public QObject
         void fillSqrtSinProxy();
         void updateGradient();
         float calcHue(float val);
+        float calcIsolineHue(float val);
 };
 
 #endif

@@ -279,20 +279,33 @@ float SurfaceGraph::calcHue(float val)
     }
 }
 
+float SurfaceGraph::calcIsolineHue(float val)
+{
+    if (val + isoline_rotation < 0)
+        return 0;
+    else {
+        return val + isoline_rotation;
+    }
+}
+
+
 void SurfaceGraph::setIsoLineGradient()
 {
     QLinearGradient gr;
-
+    gr.setColorAt(0, Qt::black);
+    gr.setColorAt(1, Qt::black);
     for (int i = 0; i < 10; i++) {
-        gr.setColorAt(calcHue(0.000 - i * 0.1), Qt::black);
-        gr.setColorAt(calcHue(0.001 - i * 0.1), Qt::white);
-        gr.setColorAt(calcHue(0.002 - i * 0.1), Qt::white);
-        gr.setColorAt(calcHue(0.003 - i * 0.1), Qt::black);
+        gr.setColorAt(calcIsolineHue(0.006 - i * 0.1), Qt::black);
+        gr.setColorAt(calcIsolineHue(0.007 - i * 0.1), Qt::white);
+        gr.setColorAt(calcIsolineHue(0.008 - i * 0.1), Qt::white);
+        gr.setColorAt(calcIsolineHue(0.009 - i * 0.1), Qt::black);
 
-        gr.setColorAt(0.000 + i * 0.1 + hue_rotation, Qt::black);
-        gr.setColorAt(0.001 + i * 0.1 + hue_rotation, Qt::white);
-        gr.setColorAt(0.002 + i * 0.1 + hue_rotation, Qt::white);
-        gr.setColorAt(0.003 + i * 0.1 + hue_rotation, Qt::black);
+        if(0.009 + i * 0.1 + isoline_rotation <= 1){
+            gr.setColorAt(0.006 + i * 0.1 + isoline_rotation, Qt::black);
+            gr.setColorAt(0.007 + i * 0.1 + isoline_rotation, Qt::white);
+            gr.setColorAt(0.008 + i * 0.1 + isoline_rotation, Qt::white);
+            gr.setColorAt(0.009 + i * 0.1 + isoline_rotation, Qt::black);
+        }
     }
 
     active_gradient = GradientState::StateIsoLine;
@@ -333,14 +346,67 @@ void SurfaceGraph::setGreenToRedGradient()
     m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
 }
 
+void SurfaceGraph::setCustomIsoLineGradient(){
+    QLinearGradient gr;
+    gr.setColorAt(0.0, Qt::black);
+
+    if(customIsolineMin > 0.0){
+        gr.setColorAt(customIsolineMin-0.002, Qt::black);
+        gr.setColorAt(customIsolineMin-0.001, Qt::white);
+        gr.setColorAt(customIsolineMin+0.001, Qt::white);
+        gr.setColorAt(customIsolineMin+0.002, Qt::black);
+    }
+
+    double stepSize = (customIsolineMax - customIsolineMin) / customIsolineInterval;
+    for(int i=1; i < customIsolineInterval; i++){
+        double at = customIsolineMin + stepSize * i;
+        gr.setColorAt(at-0.002, Qt::black);
+        gr.setColorAt(at-0.001, Qt::white);
+        gr.setColorAt(at+0.001, Qt::white);
+        gr.setColorAt(at+0.002, Qt::black);
+    }
+
+    if(customIsolineMax < 1.0){
+        gr.setColorAt(customIsolineMax-0.002, Qt::black);
+        gr.setColorAt(customIsolineMax-0.001, Qt::white);
+        gr.setColorAt(customIsolineMax+0.001, Qt::white);
+        gr.setColorAt(customIsolineMax+0.002, Qt::black);
+    }
+
+    gr.setColorAt(1.0, Qt::black);
+    active_gradient = GradientState::CustomIsoLine;
+
+    m_graph->seriesList().at(0)->setBaseGradient(gr);
+    m_graph->seriesList().at(0)->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
+}
+
+void SurfaceGraph::setCustomIsolineMin(double value){
+    customIsolineMin = value * 0.1;
+    if(active_gradient == GradientState::CustomIsoLine){
+        setCustomIsoLineGradient();
+    }
+}
+
+void SurfaceGraph::setCustomIsolineMax(double value){
+    customIsolineMax = value * 0.1;
+    if(active_gradient == GradientState::CustomIsoLine){
+        setCustomIsoLineGradient();
+    }
+}
+
+void SurfaceGraph::setCustomIsolineInterval(int value){
+    customIsolineInterval = value;
+    if(active_gradient == GradientState::CustomIsoLine){
+        setCustomIsoLineGradient();
+    }
+}
+
 void SurfaceGraph::updateGradient()
 {
     if(active_gradient == GradientState::StateGreenToRed) {
         setGreenToRedGradient();
     } else if(active_gradient == GradientState::StateBlackToYellow) {
         setBlackToYellowGradient();
-    } else if(active_gradient == GradientState::StateIsoLine) {
-        setIsoLineGradient();
     }
 }
 
@@ -348,6 +414,14 @@ void SurfaceGraph::hueRotation(double val)
 {
     hue_rotation = static_cast<float>(val) ;
     updateGradient();
+}
+
+void SurfaceGraph::isolineRotation(double val)
+{
+    isoline_rotation = static_cast<float>(val) ;
+    if(active_gradient == GradientState::StateIsoLine){
+        setIsoLineGradient();
+    }
 }
 
 void SurfaceGraph::scaleGraph(double val)

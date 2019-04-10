@@ -103,6 +103,21 @@ int main(int argc, char **argv)
     QObject::connect(item, SIGNAL(setIsoLineGradient()),
                      surfaceGraph, SLOT(setIsoLineGradient()));
 
+    // SURFACEGRAPH
+    QObject::connect(item, SIGNAL(setCustomIsoLineGradient()),
+                     surfaceGraph, SLOT(setCustomIsoLineGradient()));
+
+
+    QObject::connect(item, SIGNAL(setCustomIsolineMax(double)),
+                     surfaceGraph, SLOT(setCustomIsolineMax(double)));
+
+    QObject::connect(item, SIGNAL(setCustomIsolineMin(double)),
+                     surfaceGraph, SLOT(setCustomIsolineMin(double)));
+
+    QObject::connect(item, SIGNAL(setCustomIsolineInterval(int)),
+                     surfaceGraph, SLOT(setCustomIsolineInterval(int)));
+
+
     QObject::connect(item, SIGNAL(setBlackToYellowGradient()),
                      surfaceGraph, SLOT(setBlackToYellowGradient()));
 
@@ -118,6 +133,9 @@ int main(int argc, char **argv)
 
     QObject::connect(item, SIGNAL(hueRotation(double)),
                      surfaceGraph, SLOT(hueRotation(double)));
+
+    QObject::connect(item, SIGNAL(isolineRotation(double)),
+                     surfaceGraph, SLOT(isolineRotation(double)));
 
     QObject::connect(item, SIGNAL(scaleGraph(double)),
                      surfaceGraph, SLOT(scaleGraph(double)));
