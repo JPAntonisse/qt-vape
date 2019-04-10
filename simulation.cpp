@@ -134,9 +134,9 @@ void Simulation::setArrowScale(double scale){
 
 void Simulation::setArrowSize(fftw_real force, QCustom3DItem* arrow){
     double realForce = abs(force);
-    if(realForce > (0.04 * arrowScale)){
+    if(realForce > (0.04)){
         arrow->setScaling(QVector3D((0.04 * arrowScale), (0.04 * arrowScale), (0.04 * arrowScale)));
-    }else if (realForce < (0.02 * arrowScale)){
+    }else if (realForce < (0.02)){
         arrow->setScaling(QVector3D((0.02 * arrowScale), (0.02 * arrowScale), (0.02 * arrowScale)));
     }else{
         arrow->setScaling(QVector3D((0.03 * arrowScale), (0.03 * arrowScale), (0.03 * arrowScale)));
