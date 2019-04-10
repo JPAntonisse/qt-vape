@@ -660,16 +660,16 @@ Page {
                     border.color: "black"
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
-                        GradientStop { position: (-0.000); color: "black" }
-                        GradientStop { position: (0.500); color: "black" }
-                        GradientStop { position: (0.501); color: "white" }
-                        GradientStop { position: (0.502); color: "white" }
-                        GradientStop { position: (0.503); color: "black" }
+                        GradientStop { position: (0.000); color: "black" }
+                        GradientStop { position: (min.value*0.1 - 0.002); color: "black" }
+                        GradientStop { position: (min.value*0.1 - 0.001); color: "white" }
+                        GradientStop { position: (min.value*0.1 + 0.001); color: "white" }
+                        GradientStop { position: (min.value*0.1 + 0.002); color: "black" }
 
-                        GradientStop { position: (0.900); color: "black" }
-                        GradientStop { position: (0.901); color: "white" }
-                        GradientStop { position: (0.902); color: "white" }
-                        GradientStop { position: (0.903); color: "black" }
+                        GradientStop { position: (max.value*0.1 - 0.002); color: "black" }
+                        GradientStop { position: (max.value*0.1 - 0.001); color: "white" }
+                        GradientStop { position: (max.value*0.1 + 0.001); color: "white" }
+                        GradientStop { position: (max.value*0.1 + 0.002); color: "black" }
                         GradientStop { position: (1.000); color: "black" }
                     }
                     MouseArea {
