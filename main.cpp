@@ -103,7 +103,9 @@ int main(int argc, char **argv)
     QObject::connect(item, SIGNAL(setIsoLineGradient()),
                      surfaceGraph, SLOT(setIsoLineGradient()));
 
-    // SURFACEGRAPH
+    QObject::connect(item, SIGNAL(enableAxis(bool)),
+                     surfaceGraph, SLOT(enableAxis(bool)));
+
     QObject::connect(item, SIGNAL(setCustomIsoLineGradient()),
                      surfaceGraph, SLOT(setCustomIsoLineGradient()));
 

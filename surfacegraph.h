@@ -64,6 +64,7 @@ class SurfaceGraph : public QObject
         void setCustomIsolineMin(double val);
         void setCustomIsolineInterval(int val);
         void setCustomIsoLineGradient();
+        void enableAxis(bool val);
 
         void toggleModeItem() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItem); }
     private:

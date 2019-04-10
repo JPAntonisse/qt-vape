@@ -191,7 +191,7 @@ fftw_real Simulation::getDataPoint(int idx)
     } else if (visualize_data == Simulation::FORCE) {
         return sqrt(pow(fx[idx], 2) + pow(fy[idx], 2));
     } else if (visualize_data == Simulation::DIVERGENCE) {
-        return sqrt(pow(divx[idx], 2) + pow(divy[idx], 2)) * 40;
+        return divx[idx] + divy[idx] * 40;
     }
 
     return rho[idx];

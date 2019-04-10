@@ -74,7 +74,7 @@ Page {
                         id: slidertext1
                         height: 20
                         color: "#ffffff"
-                        text: qsTr("Graph scaling")
+                        text: qsTr("Graph size")
                         anchors.topMargin: 15
                         anchors.top: parent.top
                         verticalAlignment: Text.AlignTop
@@ -85,9 +85,17 @@ Page {
                         id: scales
                         stepSize: 0.01
                         value: 0.2
+                        width: 120
                         onValueChanged: {
                             root.scaleGraph(value)
                         }
+                    }
+
+                    SwitchDelegate {
+                        text: qsTr("Show Axis")
+                        checked: true
+                        onToggled: root.enableAxis(checked)
+                        font.pixelSize: 12
                     }
                 }
 
@@ -136,11 +144,12 @@ Page {
 
 
                 Rectangle {
+                    id: highlight1
                     width: parent.width - 2 * parent.padding
                     height: 20
                     color: "#ffffff"
                     border.width: 0
-                    border.color: "black"
+                    border.color: "white"
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
                         GradientStop { position: (-1.0 + hue.value); color: "yellow" }
@@ -154,6 +163,11 @@ Page {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
+                            highlight1.border.width = 3
+                            highlight2.border.width = 0
+                            highlight3.border.width = 0
+                            highlight4.border.width = 0
+
                             root.setBlackToYellowGradient()
                         }
                     }
@@ -240,11 +254,12 @@ Page {
                 }
 
                 Rectangle {
+                    id: highlight2
                     width: parent.width - 2 * parent.padding
                     height: 20
                     color: "#ffffff"
                     border.width: 0
-                    border.color: "black"
+                    border.color: "white"
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
                         GradientStop { position: (-0.99 + hue.value); color: "darkred" }
@@ -258,6 +273,10 @@ Page {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
+                            highlight1.border.width = 0
+                            highlight2.border.width = 3
+                            highlight3.border.width = 0
+                            highlight4.border.width = 0
                             root.setGreenToRedGradient()
                         }
                     }
@@ -435,11 +454,12 @@ Page {
             Column {
                 anchors.fill: parent
                 Rectangle {
+                    id: highlight3
                     width: parent.width - 2 * parent.padding
                     height: 20
                     color: "#ffffff"
                     border.width: 0
-                    border.color: "black"
+                    border.color: "white"
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
                         GradientStop { position: (-0.0 + hue2.value); color: "black" }
@@ -527,6 +547,10 @@ Page {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
+                            highlight1.border.width = 0
+                            highlight2.border.width = 0
+                            highlight3.border.width = 3
+                            highlight4.border.width = 0
                             root.setIsoLineGradient()
                         }
                     }
@@ -653,11 +677,12 @@ Page {
                 }
 
                 Rectangle {
+                    id: highlight4
                     width: parent.width - 2 * parent.padding
                     height: 20
                     color: "#ffffff"
                     border.width: 0
-                    border.color: "black"
+                    border.color: "white"
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
                         GradientStop { position: (0.000); color: "black" }
@@ -675,6 +700,10 @@ Page {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
+                            highlight1.border.width = 0
+                            highlight2.border.width = 0
+                            highlight3.border.width = 0
+                            highlight4.border.width = 3
                             root.setCustomIsoLineGradient()
                         }
                     }

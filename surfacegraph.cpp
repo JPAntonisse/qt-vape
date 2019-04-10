@@ -53,6 +53,12 @@ void SurfaceGraph::resetData(QSurfaceDataArray *dataArray)
     m_simSinProxy->resetArray(dataArray);
 }
 
+void SurfaceGraph::enableAxis(bool val){
+    m_graph->activeTheme()->setGridEnabled(val);
+    if(val) m_graph->activeTheme()->setLabelTextColor("white");
+    else m_graph->activeTheme()->setLabelTextColor("transparant");
+}
+
 void SurfaceGraph::generateData()
 {
 

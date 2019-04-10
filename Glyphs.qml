@@ -153,11 +153,12 @@ Page {
                 }
 
                 Rectangle {
+                    id: highlight1
                     width: parent.width - 2 * parent.padding
                     height: 20
                     color: "#ffffff"
                     border.width: 0
-                    border.color: "black"
+                    border.color: "white"
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
                         GradientStop { position: 0.0; color: "green" }
@@ -165,7 +166,11 @@ Page {
                     }
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: root.setGlypColor(false)
+                        onClicked: {
+                            highlight1.border.width = 3
+                            highlight2.border.width = 0
+                            root.setGlypColor(false)
+                        }
                     }
                 }
 
@@ -250,11 +255,12 @@ Page {
                 }
 
                 Rectangle {
+                    id: highlight2
                     width: parent.width - 2 * parent.padding
                     height: 20
                     color: "#ffffff"
                     border.width: 0
-                    border.color: "black"
+                    border.color: "white"
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
                         GradientStop { position: 0.0; color: "green" }
@@ -263,7 +269,11 @@ Page {
                     }
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: root.setGlypColor(true)
+                        onClicked: {
+                            highlight1.border.width = 0
+                            highlight2.border.width = 3
+                            root.setGlypColor(true)
+                        }
 
                     }
                 }

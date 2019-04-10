@@ -28,6 +28,7 @@ Rectangle {
     signal setCustomIsolineMax(double val);
     signal setCustomIsolineMin(double val);
     signal setCustomIsolineInterval(int val);
+    signal enableAxis(bool val);
 
     Material.theme: Material.Dark
     Material.accent: Material.Blue
