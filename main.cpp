@@ -81,14 +81,10 @@ int main(int argc, char **argv)
 
 
     // CONTAINER
-    QObject::connect(item, SIGNAL(setBlackToYellowGradient()),
-                     surfaceGraph, SLOT(setBlackToYellowGradient()));
 
     QObject::connect(item, SIGNAL(setGridType(QString)),
                      container_m, SLOT(setGridType(QString)));
 
-    QObject::connect(item, SIGNAL(setGreenToRedGradient()),
-                     surfaceGraph, SLOT(setGreenToRedGradient()));
 
     QObject::connect(item, SIGNAL(showSurface(bool)),
                     container_m, SLOT(showSurface(bool)));
@@ -104,6 +100,16 @@ int main(int argc, char **argv)
 
 
     // SURFACEGRAPH
+    QObject::connect(item, SIGNAL(setIsoLineGradient()),
+                     surfaceGraph, SLOT(setIsoLineGradient()));
+
+    QObject::connect(item, SIGNAL(setBlackToYellowGradient()),
+                     surfaceGraph, SLOT(setBlackToYellowGradient()));
+
+
+    QObject::connect(item, SIGNAL(setGreenToRedGradient()),
+                     surfaceGraph, SLOT(setGreenToRedGradient()));
+
     QObject::connect(item, SIGNAL(drawWireFrame(bool)),
                      surfaceGraph, SLOT(drawWireFrame(bool)));
 
