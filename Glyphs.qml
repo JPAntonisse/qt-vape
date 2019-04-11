@@ -45,6 +45,7 @@ Page {
                         checked: true
                         onClicked: root.setDataSet("velocity")
                         width: parent.width / 2 - 7.5
+                        font.pixelSize: 13
                     }
 
                     RadioDelegate {
@@ -52,6 +53,7 @@ Page {
                         text: qsTr("Force")
                         onClicked: root.setDataSet("force")
                         width: parent.width / 2 - 7.5
+                        font.pixelSize: 13
                     }
                 }
 

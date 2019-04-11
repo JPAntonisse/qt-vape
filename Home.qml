@@ -44,23 +44,27 @@ Page {
                         checked: true
                         onClicked: root.setDataSet("density")
                         width: parent.width / 2 - 7.5
+                        font.pixelSize: 13
                     }
 
                     RadioDelegate {
                         text: qsTr("Velocity")
                         onClicked: root.setDataSet("velocity")
                         width: parent.width / 2 - 7.5
+                        font.pixelSize: 13
                     }
 
                     RadioDelegate {
                         text: qsTr("Force")
                         onClicked: root.setDataSet("force")
                         width: parent.width / 2 - 7.5
+                        font.pixelSize: 13
                     }
                     RadioDelegate {
                         text: qsTr("Divergence")
                         onClicked: root.setDataSet("divergence")
                         width: parent.width / 2 - 7.5
+                        font.pixelSize: 13
                     }
 
                 }
@@ -422,12 +426,14 @@ Page {
                         id: pause_sim
                         text: qsTr("Pause Simulation")
                         onClicked: root.pauseSimulation(true)
+                        font.pixelSize: 13
                     }
 
                     Button {
                         id: continue_sim
                         text: qsTr("Resume Simulation")
                         onClicked: root.pauseSimulation(false)
+                        font.pixelSize: 13
                     }
                 }
             }

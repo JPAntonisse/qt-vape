@@ -43,9 +43,11 @@ Rectangle {
         anchors.topMargin: 0
         TabButton {
             text: qsTr("Home")
+            font.pixelSize: 13
         }
         TabButton {
             text: qsTr("Glyphs")
+            font.pixelSize: 13
         }
     }
 
